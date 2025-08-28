@@ -2,4 +2,6 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new release.
+* Note: This is a new submission.
+* Since this package uses Shiny extensively, I have written the tests to check 
+  the HTML output of the widgets produced. 

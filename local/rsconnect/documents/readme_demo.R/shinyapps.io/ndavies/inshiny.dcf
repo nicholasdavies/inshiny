@@ -1,0 +1,13 @@
+name: inshiny
+title: inshiny
+username: ndavies
+account: ndavies
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15296508
+bundleId: 10832743
+url: https://ndavies.shinyapps.io/inshiny/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: demo.html|demo.R|input_align.css|input_align.js|input_align.R|number.css|number.js|number.R|workflow.R
