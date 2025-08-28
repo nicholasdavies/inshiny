@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>inshiny • inshiny</title>
+<title>Introduction to inshiny • inshiny</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="inshiny">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to inshiny">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -51,7 +51,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>inshiny</h1>
+      <h1>Introduction to inshiny</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/nicholasdavies/inshiny/blob/main/vignettes/inshiny.Rmd" class="external-link"><code>vignettes/inshiny.Rmd</code></a></small>
@@ -60,8 +60,145 @@
 
     
     
+<p><code>inshiny</code> provides a basic set of compact Shiny input
+widgets that are designed to be displayed within surrounding text
+without breaking the spacing between lines. You can use
+<code>inshiny</code> to integrate Shiny input within text paragraphs, or
+just to get user input for your Shiny app without taking up as much
+space on the page compared to standard Shiny inputs.</p>
+<p>By default, Shiny uses <a href="https://getbootstrap.com/docs/3.4/" class="external-link">Bootstrap 3</a> for layouts
+and styling. <code>inshiny</code> requires <a href="https://getbootstrap.com/docs/5.3/getting-started/introduction/" class="external-link">Bootstrap
+5</a>, which just means that you will need to use the <code>bslib</code>
+package (which enables updating to Bootstrap 5) in addition to
+<code>shiny</code> for <code>inshiny</code> to work.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicholasdavies/inshiny" class="external-link">inshiny</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'bslib'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:utils':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     page</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicholasdavies/inshiny" class="external-link">inshiny</a></span><span class="op">)</span></span></code></pre></div>
+<p>To use Bootstrap 5, when building your UI, you should use one of
+<code>bslib</code>’s page layout functions instead of Shiny’s built-in
+page layouts. In other words, use</p>
+<ul>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">bslib::page()</a></code> instead of
+<code><a href="https://rdrr.io/pkg/shiny/man/bootstrapPage.html" class="external-link">shiny::basicPage()</a></code> or <code><a href="https://rdrr.io/pkg/shiny/man/bootstrapPage.html" class="external-link">bootstrapPage()</a></code>
+</li>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fluid()</a></code> instead of <code><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage()</a></code>
+</li>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fixed()</a></code> instead of <code><a href="https://rdrr.io/pkg/shiny/man/fixedPage.html" class="external-link">fixedPage()</a></code>
+</li>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page_fillable.html" class="external-link">page_fillable()</a></code> instead of <code><a href="https://rdrr.io/pkg/shiny/man/fillPage.html" class="external-link">fillPage()</a></code>
+</li>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page_sidebar.html" class="external-link">page_sidebar()</a></code> instead of <code><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout()</a></code>
+within <code><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage()</a></code>
+</li>
+<li>
+<code><a href="https://rstudio.github.io/bslib/reference/page_navbar.html" class="external-link">page_navbar()</a></code> instead of
+<code><a href="https://rdrr.io/pkg/shiny/man/navbarPage.html" class="external-link">navbarPage()</a></code>.</li>
+</ul>
+<p>You should also set a theme using <code><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bslib::bs_theme()</a></code>;
+this allows you to specify <code>version = 5</code> so that your app
+will continue to use Bootstrap 5 even after Bootstrap 6 is released and
+<code>bslib</code> starts to support it. (We may add support for
+Bootstrap 6 to <code>inshiny</code> in the future, but better to make
+sure your app stays future-proof either way!)</p>
+<p>All <code>inshiny</code> widgets should be wrapped in a call to
+<code><a href="../reference/inline.html">inline()</a></code>, which creates a “paragraph” or “line” of text in
+which you can mix in widgets and arbitrary HTML elements. You can then
+use widgets such as <code><a href="../reference/inline_text.html">inline_text()</a></code> or
+<code><a href="../reference/inline_slider.html">inline_slider()</a></code> within this element. Here is a simple demo
+of a Shiny UI that uses all the widgets provided by
+<code>inshiny</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fixed</a></span><span class="op">(</span></span>
+<span>    theme <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bs_theme</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">5</span>, preset <span class="op">=</span> <span class="st">"quartz"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Temperature plot"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span>, width <span class="op">=</span> <span class="fl">480</span>, height <span class="op">=</span> <span class="fl">320</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/inline.html">inline</a></span><span class="op">(</span><span class="st">"Start on "</span>, <span class="fu"><a href="../reference/inline_date.html">inline_date</a></span><span class="op">(</span><span class="st">"start_date"</span>, <span class="st">"2025-01-01"</span><span class="op">)</span>,</span>
+<span>        <span class="st">" and plot for "</span>, <span class="fu"><a href="../reference/inline_number.html">inline_number</a></span><span class="op">(</span><span class="st">"num_days"</span>, <span class="fl">365</span><span class="op">)</span>, <span class="st">" days."</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/inline.html">inline</a></span><span class="op">(</span><span class="st">"Average temperature: "</span>, <span class="fu"><a href="../reference/inline_slider.html">inline_slider</a></span><span class="op">(</span><span class="st">"avg_temp"</span>, <span class="fl">20</span>, <span class="fl">0</span>, <span class="fl">40</span><span class="op">)</span>,</span>
+<span>        <span class="st">" °C. Range: ±"</span>, <span class="fu"><a href="../reference/inline_select.html">inline_select</a></span><span class="op">(</span><span class="st">"temp_range"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>, <span class="st">" °C."</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/inline.html">inline</a></span><span class="op">(</span><span class="st">"Hemisphere: "</span>, <span class="fu"><a href="../reference/inline_switch.html">inline_switch</a></span><span class="op">(</span><span class="st">"southern"</span>, <span class="cn">FALSE</span>,</span>
+<span>        on <span class="op">=</span> <span class="st">"Southern"</span>, off <span class="op">=</span> <span class="st">"Northern"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/inline.html">inline</a></span><span class="op">(</span><span class="fu"><a href="../reference/inline_button.html">inline_button</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"Change colour"</span><span class="op">)</span>, <span class="st">" "</span>,</span>
+<span>        <span class="fu"><a href="../reference/inline_link.html">inline_link</a></span><span class="op">(</span><span class="st">"reset"</span>, <span class="st">"Reset"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The page starts with a title (<code>h1</code>) and a
+<code><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">shiny::plotOutput()</a></code> that we’ll use to plot average
+temperatures according to the settings below. There’s a line break
+(<code>br</code>) to space things out, then four <code>inline</code>
+lines containing the <code>inline_*</code> widgets provided by
+<code>inshiny</code>. It looks something like this:</p>
+<p><img src="images/vignette_1.jpg" width="480"></p>
+<p>Compare this to a similar layout with basic Shiny inputs:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fixed</a></span><span class="op">(</span></span>
+<span>    theme <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bs_theme</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">5</span>, preset <span class="op">=</span> <span class="st">"quartz"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Temperature plot"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span>, width <span class="op">=</span> <span class="fl">480</span>, height <span class="op">=</span> <span class="fl">320</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/dateInput.html" class="external-link">dateInput</a></span><span class="op">(</span><span class="st">"start_date"</span>, <span class="st">"Start date"</span>, <span class="st">"2025-01-01"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html" class="external-link">numericInput</a></span><span class="op">(</span><span class="st">"num_days"</span>, <span class="st">"Number of days"</span>, <span class="fl">365</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span><span class="st">"avg_temp"</span>, <span class="st">"Average temperature (°C)"</span>, <span class="fl">0</span>, <span class="fl">40</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput</a></span><span class="op">(</span><span class="st">"temp_range"</span>, <span class="st">"Temperature range (± °C)"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="st">"southern"</span>, <span class="st">"Southern hemisphere"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"Change colour"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionLink</a></span><span class="op">(</span><span class="st">"reset"</span>, <span class="st">"Reset"</span><span class="op">)</span>,</span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>This version takes up more space:</p>
+<p><img src="images/vignette_2.jpg" width="480"></p>
+<p>Of course, you could save some vertical space by laying out the
+elements in a grid, but they are still rather large compared to the
+<code>inshiny</code> widgets.</p>
+<p>We complete the app using server code to handle the inputs:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span></span>
+<span><span class="op">{</span></span>
+<span>    <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>        <span class="va">date</span> <span class="op">&lt;-</span> <span class="va">input</span><span class="op">$</span><span class="va">start_date</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">num_days</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>;</span>
+<span>        <span class="va">xpts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXlt</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">$</span><span class="va">yday</span>; <span class="co"># day number, 0-365</span></span>
+<span>        <span class="va">temperature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">*</span> <span class="va">xpts</span> <span class="op">/</span> <span class="fl">364</span><span class="op">)</span> <span class="op">*</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">southern</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">temp_range</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="va">input</span><span class="op">$</span><span class="va">avg_temp</span>;</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">temperature</span>, type <span class="op">=</span> <span class="st">"l"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">15</span>, <span class="fl">55</span><span class="op">)</span>,</span>
+<span>            col <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">colour</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">16</span> <span class="op">+</span> <span class="fl">1</span>, lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span>, col <span class="op">=</span> <span class="fl">8</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">reset</span>, <span class="op">{</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"start_date"</span>, value <span class="op">=</span> <span class="st">"2025-01-01"</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"num_days"</span>, value <span class="op">=</span> <span class="fl">365</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"avg_temp"</span>, value <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"temp_range"</span>, value <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"southern"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_inline.html">update_inline</a></span><span class="op">(</span><span class="st">"colour"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>This illustrates the use of <code><a href="../reference/update_inline.html">update_inline()</a></code> to reset the
+widgets to their original values. You would then launch the app with
+<code>shinyApp(ui, server)</code>.</p>
   </main>
 </div>
 
