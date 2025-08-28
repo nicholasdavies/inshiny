@@ -143,11 +143,6 @@ change_attrib = function(html, idx, name, val, .env = parent.frame())
     return (invisible())
 }
 
-change_class = function(html, idx, class, .env = parent.frame())
-{
-    do.call(change_attrib, list(substitute(html), idx, "class", class, .env))
-}
-
 append_class = function(html, idx, classes, .env = parent.frame())
 {
     class = attrib(html, idx, "class")

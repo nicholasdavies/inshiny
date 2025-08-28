@@ -20,6 +20,7 @@ usethis::use_pkgdown_github_pages()
 
 # Testing
 usethis::use_testthat()
+usethis::use_coverage()
 
 # Add 'local' directory
 dir.create("./local")

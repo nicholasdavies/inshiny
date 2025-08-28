@@ -6,3 +6,9 @@ test_that("date is stable", {
         autoclose = TRUE, datesdisabled = c("2025-12-25", "2026-12-25"),
         daysofweekdisabled = c(0, 6))))
 })
+
+test_that("date errors detected", {
+    expect_error(inline_date("date_id", value = as.Date("2025-08-28"),
+        min = "2025-09-01", max = "2025-09-30"))
+    expect_error(inline_date("date_id", value = NA))
+})
