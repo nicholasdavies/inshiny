@@ -3,7 +3,8 @@ library(bslib)
 library(inshiny)
 
 ui <- page_fixed(
-    theme = bs_theme(version = 5, preset = "shiny"),
+    theme = bs_theme(version = 5, preset = "quartz"),
+    tags$head(tags$style("body { background-image: none }")),
 
     h1("Temperature plot"),
 
@@ -24,23 +25,24 @@ ui <- page_fixed(
         inline_link("reset", "Reset"))
 )
 
-# ui <- page_fixed(
-#     theme = bs_theme(version = 5, preset = "quartz"),
-#
-#     h1("Temperature plot"),
-#
-#     plotOutput("plot", width = 480, height = 320),
-#
-#     br(),
-#
-#     dateInput("start_date", "Start date", "2025-01-01"),
-#     numericInput("num_days", "Number of days", 365),
-#     sliderInput("avg_temp", "Average temperature (°C)", 0, 40, 20),
-#     selectInput("temp_range", "Temperature range (± °C)", c(5, 10, 15), 10),
-#     checkboxInput("southern", "Southern hemisphere", FALSE),
-#     actionButton("colour", "Change colour"),
-#     actionLink("reset", "Reset"),
-# )
+ui <- page_fixed(
+    theme = bs_theme(version = 5, preset = "quartz"),
+    tags$head(tags$style("body { background-image: none }")),
+
+    h1("Temperature plot"),
+
+    plotOutput("plot", width = 480, height = 320),
+
+    br(),
+
+    dateInput("start_date", "Start date", "2025-01-01"),
+    numericInput("num_days", "Number of days", 365),
+    sliderInput("avg_temp", "Average temperature (°C)", 0, 40, 20),
+    selectInput("temp_range", "Temperature range (± °C)", c(5, 10, 15), 10),
+    checkboxInput("southern", "Southern hemisphere", FALSE),
+    actionButton("colour", "Change colour"),
+    actionLink("reset", "Reset"),
+)
 
 server <- function(input, output, session)
 {

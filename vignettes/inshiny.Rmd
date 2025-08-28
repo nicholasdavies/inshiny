@@ -24,9 +24,8 @@ within text paragraphs, or just to get user input for your Shiny app
 without taking up as much space on the page compared to standard Shiny
 inputs.
 
-By default, Shiny uses [Bootstrap
-3](https://getbootstrap.com/docs/3.4/) for layouts and styling.
-`inshiny` requires [Bootstrap
+By default, Shiny uses [Bootstrap 3](https://getbootstrap.com/docs/3.4/)
+for layouts and styling. `inshiny` requires [Bootstrap
 5](https://getbootstrap.com/docs/5.3/getting-started/introduction/),
 which just means that you will need to use the `bslib` package (which
 enables updating to Bootstrap 5) in addition to `shiny` for `inshiny` to
@@ -92,7 +91,7 @@ There's a line break (`br`) to space things out, then four `inline`
 lines containing the `inline_*` widgets provided by `inshiny`. It looks
 something like this:
 
-![](images/vignette_1.jpg){width="480"}
+![](images/vignette_1.jpg){width="450"}
 
 Compare this to a similar layout with basic Shiny inputs:
 
@@ -116,9 +115,9 @@ ui <- page_fixed(
 )
 ```
 
-This version takes up more space:
+The controls for this version take up far more space:
 
-![](images/vignette_2.jpg){width="480"}
+![](images/vignette_2.jpg){width="450"}
 
 Of course, you could save some vertical space by laying out the elements
 in a grid, but they are still rather large compared to the `inshiny`
