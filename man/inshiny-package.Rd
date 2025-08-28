@@ -4,12 +4,21 @@
 \name{inshiny-package}
 \alias{inshiny}
 \alias{inshiny-package}
-\title{inshiny: What the Package Does (Title Case)}
+\title{inshiny: Compact Inline Widgets for 'Shiny' Apps}
 \description{
-More about what it does (maybe more than one line). Continuation lines should be indented.
+Provides a basic set of compact widgets for Shiny apps which occupy minimum space and appear "inline" with explanatory text.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/nicholasdavies/inshiny}
+  \item \url{https://nicholasdavies.github.io/inshiny/}
+  \item Report bugs at \url{https://github.com/nicholasdavies/inshiny/issues}
+}
+
 }
 \author{
-\strong{Maintainer}: Jane Doe \email{jane@example.com}
+\strong{Maintainer}: Nick Davies \email{nicholas.davies@lshtm.ac.uk}
 
 }
 \keyword{internal}

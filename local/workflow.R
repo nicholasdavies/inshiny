@@ -28,10 +28,15 @@ usethis::write_union("./.Rbuildignore", "^local$")
 
 # ADDING ELEMENTS
 # Import package
-usethis::use_package("cowplot")
+usethis::use_package("shiny")
+usethis::use_package("stringr")
+usethis::use_package("bslib")
+usethis::use_package("htmltools")
+usethis::use_package("rlang")
+# usethis::use_package("shinyjs")
 
 # Add vignette
-usethis::use_vignette("overshiny")
+usethis::use_vignette("inshiny")
 
 
 # BUILD CYCLE
@@ -42,6 +47,7 @@ pkgdown::build_site()
 
 devtools::build(vignettes = TRUE)
 devtools::install(build_vignettes = TRUE)
+
 
 # RELEASE CYCLE
 devtools::check(remote = TRUE, manual = TRUE)

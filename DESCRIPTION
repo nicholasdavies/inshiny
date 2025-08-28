@@ -1,20 +1,32 @@
 Package: inshiny
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Compact Inline Widgets for 'Shiny' Apps
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Nick", "Davies",
+      email = "nicholas.davies@lshtm.ac.uk",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: Provides a basic set of compact widgets for Shiny apps which 
+    occupy minimum space and appear "inline" with explanatory text.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://github.com/nicholasdavies/inshiny
+URL: https://github.com/nicholasdavies/inshiny, https://nicholasdavies.github.io/inshiny/
 BugReports: https://github.com/nicholasdavies/inshiny/issues
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    bslib,
+    htmltools,
+    rlang,
+    shiny,
+    stringr
+VignetteBuilder: knitr

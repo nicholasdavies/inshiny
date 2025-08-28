@@ -1,0 +1,372 @@
+/* GENERAL CLASSES */
+
+.inshiny-nofocus:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.inshiny-invalid {
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+}
+
+
+/* BUTTON INPUT */
+
+/* The btn-container is for holding two elements, the btn (button itself sized
+   to the btn-container) and the btn-spacer (spacer for the button). We inset the
+   btn inside the btn-container to keep the button itself the right size to not
+   disrupt the flow of text. The btn-spacer is needed to save the right amount
+   of space for the btn to sit inside the btn-container. */
+.inshiny-btn-container {
+    /* This allows the btn to sit inside the btn-container. */
+    display: inline-block;
+    position: relative;
+
+    /* This ensures no additional spacing caused by the btn-container,
+       aside from a bit of padding on the sides to make sure the button's
+       label fits. */
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+
+    /* The btn-container will be paired with Shiny button classes (e.g. btn
+       btn-primary) but this is only so the btn-spacer that sits inside it can
+       inherit its text-related properties from these button classes. We don't
+       want the btn-container itself to be visible, so we disable any
+       decorative elements. */
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+
+    /* We want the inshiny-btn's label to look like the surrounding text and be
+       aligned with it, so that the button is continuous with the text. */
+    font: inherit !important;
+    text-decoration: inherit !important;
+    vertical-align: inherit !important;
+    text-align: inherit !important;
+    line-height: inherit !important;
+}
+
+/* Similarly, set properties for :hover, :focus, and :focus-visible variants. */
+.inshiny-btn-container:hover {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.inshiny-btn-container:focus {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.inshiny-btn-container:focus-visible {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+/* The btn is the button itself, but with padding removed so that the label of
+   the button can be positioned within correct text flow. The decorative
+   attributes - background color, border, shadows etc. - all come from
+   classes also applied to inshiny-btn. */
+.inshiny-btn {
+    /* Inset button within btn-container's bounding box. */
+    display: inline-block;
+    position: absolute;
+    inset: 0;
+
+    /* No extra margin or padding. */
+    margin: 0 !important;
+    padding: 0 !important;
+
+    /* We want to inherit the text look of the btn-container, which itself
+       inherits the look of the surrounding text. */
+    font: inherit;
+    text-decoration: inherit;
+    vertical-align: inherit !important;
+}
+
+/* The btn-spacer takes up the space inside the btn-container that the button
+   should take up, so that the inshiny-btn will display properly. It is
+   invisible as we want the rendering to come from the inshiny-btn itself. */
+.inshiny-btn-spacer {
+    /* This allows the label to take up space in the container. */
+    position: relative;
+
+    /* No visibility, just for spacing. */
+    visibility: hidden;
+
+    /* Take up very little height, so as not to mess with line spacing. */
+    display: inline-block;
+    height: 0.1rem;
+    vertical-align: inherit !important;
+
+    /* Invisibility should handle this, but let's be safe. */
+    pointer-events: none !important;
+}
+
+
+/* TEXT INPUT */
+
+.inshiny-text-container {
+    position: relative;
+    margin: 0 0.15rem;
+}
+
+.inshiny-text-form {
+    position: relative;
+    padding: 0 0 0 0.35rem;
+}
+
+.inshiny-text-placeholder {
+    position: relative;
+    display: none;
+}
+
+.inshiny-text-rightpadding {
+    cursor: text;
+    position: relative;
+    padding: 0 0.35rem 0 0;
+}
+
+.inshiny-text-box {
+    position: absolute;
+    inset: -0.25rem 0rem;
+    z-index: -1;
+    padding: 0
+}
+
+
+/* NUMBER INPUT */
+
+.inshiny-arrows {
+    display: inline-block;
+    width: 0.8em;
+    height: 100%;
+    vertical-align: text-top;
+}
+
+.inshiny-arrows span {
+    display: block;
+    width: 0;
+    height: 0;
+    line-height: 1;
+
+    margin: 0.15rem;
+    padding: 0;
+}
+
+.inshiny-arrows .inshiny-inc {
+    border-bottom: 0.4rem solid var(--bs-secondary);
+    border-left: 0.4rem solid transparent;
+    border-right: 0.4rem solid transparent;
+    border-top: 0 solid transparent;
+}
+
+.inshiny-arrows .inshiny-dec {
+    border-bottom: 0 solid transparent;
+    border-left: 0.4rem solid transparent;
+    border-right: 0.4rem solid transparent;
+    border-top: 0.4rem solid var(--bs-secondary);
+}
+
+.inshiny-arrows .inshiny-inc:hover {
+    border-bottom-color: var(--bs-primary);
+}
+
+.inshiny-arrows .inshiny-dec:hover {
+    border-top-color: var(--bs-primary);
+}
+
+.inshiny-arrows .inshiny-inc:active {
+    border-bottom-color: var(--bs-body);
+}
+
+.inshiny-arrows .inshiny-dec:active {
+    border-top-color: var(--bs-body);
+}
+
+
+/* SWITCH INPUT */
+
+.inshiny-switch-container {
+    /* Make small adjustments to the switch positioning to fit text flow. */
+    display: inline-block;
+    margin: -0.1rem -0.2rem 0 0.1rem;
+    vertical-align: text-top;
+    min-height: 0;
+}
+
+
+/* LIST INPUT */
+
+.inshiny-item {
+    padding: 0.1rem 0.5rem !important;
+}
+
+
+
+/* SELECTIZE INPUT */
+
+/* The sel-container is for holding two elements, the sel (select itself sized
+   to the sel-container) and the sel-spacer (spacer for the select). We inset the
+   sel inside the sel-container to keep the select itself the right size to not
+   disrupt the flow of text. The sel-spacer is needed to save the right amount
+   of space for the sel to sit inside the sel-container. */
+.inshiny-sel-container {
+    /* This allows the sel to sit inside the sel-container. */
+    display: inline-block;
+    position: relative;
+
+    /* This ensures no additional spacing caused by the sel-container,
+       aside from a bit of padding on the sides to make sure the select's
+       label fits. */
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+
+    /* We don't want the sel-container itself to be visible, so we disable any
+       decorative elements. */
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+
+    /* We want the inshiny-sel's label to look like the surrounding text and be
+       aligned with it, so that the select is continuous with the text. */
+    font: inherit !important;
+    text-decoration: inherit !important;
+    vertical-align: inherit !important;
+    text-align: inherit !important;
+    line-height: inherit !important;
+}
+
+/* Similarly, set properties for :hover, :focus, and :focus-visible variants. */
+.inshiny-sel-container:hover {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.inshiny-sel-container:focus {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.inshiny-sel-container:focus-visible {
+    padding: 0 0.5rem;
+    margin: 0;
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+/* The sel is the select itself, but with padding removed so that the label of
+   the select can be positioned within correct text flow. The decorative
+   attributes - background color, border, shadows etc. - all come from
+   classes also applied to inshiny-sel. */
+.inshiny-sel {
+    /* Inset select within sel-container's bounding box. */
+    display: inline-block;
+    position: absolute;
+    inset: 0;
+
+    /* No extra margin or padding. */
+    margin: 0 !important;
+    padding: 0 !important;
+
+    /* We want to inherit the text look of the sel-container, which itself
+       inherits the look of the surrounding text. */
+    font: inherit;
+    text-decoration: inherit;
+    vertical-align: inherit !important;
+}
+
+/* The sel-spacer takes up the space inside the sel-container that the select
+   should take up, so that the inshiny-sel will display properly. It is
+   invisible as we want the rendering to come from the inshiny-sel itself. */
+.inshiny-sel-spacer {
+    /* This allows the label to take up space in the container. */
+    position: relative;
+
+    /* No visibility, just for spacing. */
+    visibility: hidden;
+
+    /* Take up very little height, so as not to mess with line spacing. */
+    display: inline-block;
+    height: 0.1rem;
+    vertical-align: inherit !important;
+
+    /* Invisibility should handle this, but let's be safe. */
+    pointer-events: none !important;
+}
+
+
+.selectize-dropdown {
+    width: auto !important;
+}
+
+.selectize-dropdown [data-selectable], .selectize-dropdown .optgroup-header {
+    white-space: nowrap !important;
+}
+
+.selectize-input {
+    padding: 0 calc(0.4rem + 10px) 0 0.5rem !important;
+    min-height: 1rem !important;
+    font-size: 100% !important;
+}
+
+.selectize-control.single .selectize-input:not(.no-arrow):after {
+    right: calc(0.1rem + 5px) !important;
+}
+
+/* for multi select */
+
+.selectize-control.multi .selectize-input > div {
+    margin: 0 0.3rem 0 0 !important;
+    padding: 0 0.1rem !important;
+
+    background-color: transparent;
+    box-decoration-break: clone;
+    background-image: linear-gradient(transparent 10%, rgba(0, 0, 0, 0.05) 10%, rgba(0, 0, 0, 0.05) 90%, transparent 90%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.selectize-control.multi .selectize-input.has-items {
+    padding: 0 0 0 0.5rem !important;
+}

@@ -1,0 +1,61 @@
+.two-rows {
+    display: inline-block;
+    width: 1em;
+    height: 100%;
+    vertical-align: text-top;
+}
+
+/* TODO unclear if this class is needed. */
+.two-rows .cell {
+    display: block;
+    width: 1em;           /* adjust width as desired */
+    height: 0.5em;             /* two cells, equal height */
+    line-height: 1;
+
+    margin: 0;
+    padding: 0;
+}
+
+.two-rows .inc {
+    margin: 0.15rem;
+
+    border-bottom: 0.4rem solid var(--bs-secondary);
+    border-left: 0.4rem solid transparent;
+    border-right: 0.4rem solid transparent;
+    border-top: 0 solid transparent;
+
+    width: 0;
+    height: 0;
+}
+
+.two-rows .dec {
+    margin: 0.15rem;
+
+    border-bottom: 0 solid transparent;
+    border-left: 0.4rem solid transparent;
+    border-right: 0.4rem solid transparent;
+    border-top: 0.4rem solid var(--bs-secondary);
+
+    width: 0;
+    height: 0;
+}
+
+.two-rows .inc:hover {
+    border-bottom-color: var(--bs-primary);
+}
+
+.two-rows .dec:hover {
+    border-top-color: var(--bs-primary);
+}
+
+.two-rows .inc:active {
+    border-bottom-color: var(--bs-body);
+}
+
+.two-rows .dec:active {
+    border-top-color: var(--bs-body);
+}
+
+.text {
+    display: inline-block;
+}
