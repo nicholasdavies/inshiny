@@ -48,25 +48,63 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="inshiny">inshiny<a class="anchor" aria-label="anchor" href="#inshiny"></a>
+<div class="page-header"><h1 id="inshiny-compact-inline-widgets-for-shiny-apps">inshiny: Compact inline widgets for Shiny apps<a class="anchor" aria-label="anchor" href="#inshiny-compact-inline-widgets-for-shiny-apps"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of inshiny is to …</p>
+<p>Inshiny provides a basic set of compact widgets for Shiny apps which occupy minimum space and appear “inline” with explanatory text.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of inshiny like so:</p>
+<p>You can install the development version of inshiny from <a href="https://github.com/nicholasdavies/inshiny" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"nicholasdavies/inshiny"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>This demonstrates the basic features of inshiny:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicholasdavies/inshiny" class="external-link">inshiny</a></span><span class="op">)</span></span>
-<span><span class="co">## basic example code</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Shiny UI</span></span>
+<span><span class="va">ui</span> <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/page.html" class="external-link">page_fixed</a></span><span class="op">(</span></span>
+<span>    theme <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bs_theme</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">5</span>, preset <span class="op">=</span> <span class="st">"quartz"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"A Tale of Two Cities by Charles Dickens"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h2</a></span><span class="op">(</span><span class="st">"Configurable Edition"</span><span class="op">)</span>,</span>
+<span></span>
+<span>    <span class="fu"><a href="reference/inline.html">inline</a></span><span class="op">(</span><span class="st">"It was the year of Our Lord "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_date.html">inline_date</a></span><span class="op">(</span><span class="st">"tale_date"</span>, <span class="st">"1775-07-01"</span><span class="op">)</span>,</span>
+<span>        <span class="st">". Spiritual revelations were conceded to "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_select.html">inline_select</a></span><span class="op">(</span><span class="st">"tale_country"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"England"</span>, <span class="st">"France"</span>, <span class="st">"Spain"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        <span class="st">" at that favoured period, as at this. "</span>,</span>
+<span>        <span class="st">"Mrs. Southcott had recently attained her "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_number.html">inline_number</a></span><span class="op">(</span><span class="st">"tale_age"</span>, <span class="fl">25</span><span class="op">)</span>, <span class="st">"th blessed birthday, "</span>,</span>
+<span>        <span class="st">"of whom a prophetic private in the Life Guards had heralded the sublime appearance "</span>,</span>
+<span>        <span class="st">"by announcing that arrangements were made for the swallowing up of London and "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_text.html">inline_text</a></span><span class="op">(</span><span class="st">"tale_borough"</span>, <span class="st">"Westminster"</span><span class="op">)</span>, <span class="st">". "</span>,</span>
+<span>        <span class="st">"Even the Cock-lane ghost had been laid only a round "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_slider.html">inline_slider</a></span><span class="op">(</span><span class="st">"tale_years"</span>, <span class="fl">12</span>, <span class="fl">2</span>, <span class="fl">100</span><span class="op">)</span>, <span class="st">" of years, "</span>,</span>
+<span>        <span class="st">"after rapping out its messages, as the spirits of this very year last past "</span>,</span>
+<span>        <span class="st">"(supernaturally deficient in originality) "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_button.html">inline_button</a></span><span class="op">(</span><span class="st">"tale_button"</span>, <span class="st">"rapped out"</span><span class="op">)</span>, <span class="st">" theirs. "</span>,</span>
+<span>        <span class="st">"Mere messages in the earthly order of events had lately come to the "</span>,</span>
+<span>        <span class="st">"English Crown and People, from a congress of British subjects in "</span>,</span>
+<span>        <span class="fu"><a href="reference/inline_switch.html">inline_switch</a></span><span class="op">(</span><span class="st">"tale_usa"</span>, <span class="cn">FALSE</span>, <span class="st">" THE USA"</span>, <span class="st">" America"</span><span class="op">)</span>, <span class="st">": "</span>,</span>
+<span>        <span class="st">"which, strange to relate, have proved more important to the human race "</span>,</span>
+<span>        <span class="st">"than any communications yet received through any of the chickens "</span>,</span>
+<span>        <span class="st">"of the Cock-lane brood."</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Shiny server</span></span>
+<span><span class="va">server</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span><span class="op">)</span> <span class="op">{</span> <span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Run app</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
