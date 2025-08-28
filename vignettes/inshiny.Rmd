@@ -32,7 +32,7 @@ which just means that you will need to use the `bslib` package (which
 enables updating to Bootstrap 5) in addition to `shiny` for `inshiny` to
 work.
 
-```{r}
+```{r, message = FALSE}
 library(shiny)
 library(bslib)
 library(inshiny)
@@ -59,7 +59,7 @@ All `inshiny` widgets should be wrapped in a call to `inline()`, which
 creates a "paragraph" or "line" of text in which you can mix in widgets
 and arbitrary HTML elements. You can then use widgets such as
 `inline_text()` or `inline_slider()` within this element. Here is a
-simple demo of a Shiny UI that uses all the widgets provided by
+simple demo of a Shiny UI that uses most of the widgets provided by
 `inshiny`:
 
 ```{r}

@@ -6,8 +6,14 @@
 [![Codecov test coverage](https://codecov.io/gh/nicholasdavies/inshiny/graph/badge.svg)](https://app.codecov.io/gh/nicholasdavies/inshiny)
 <!-- badges: end -->
 
-Inshiny provides a basic set of compact widgets for Shiny apps which occupy 
+`inshiny` provides a basic set of compact widgets for Shiny apps which occupy 
 minimum space and appear "inline" with explanatory text.
+
+Consult the [Introduction](https://nicholasdavies.github.io/inshiny/articles/inshiny.html)
+vignette for a brief guide to `inshiny`. 
+
+Note that `inshiny` does not currently support use with Shiny's `uiOutput` and 
+`renderUI`.
 
 ## Installation
 
@@ -21,7 +27,7 @@ devtools::install_github("nicholasdavies/inshiny")
 
 ## Example
 
-This demonstrates the basic features of inshiny:
+This demonstrates the basic features of `inshiny`:
 
 ``` r
 library(inshiny)
