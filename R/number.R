@@ -10,7 +10,7 @@
 #'     the up or down arrow keys or with the clickable arrows on the widget. The
 #'     Page Up and Page Down keys increment or decrement the number by 10 steps,
 #'     and the Home and End keys set the number to the minimum or maximum
-#'     respectively.
+#'     respectively. The default step is 1.
 #' @param default A default value to be used if the input is invalid or empty.
 #' @inherit inline_text return
 #' @seealso [shiny::numericInput] for how the number input works with your Shiny server.
