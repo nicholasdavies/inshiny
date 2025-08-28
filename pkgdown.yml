@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   inshiny: inshiny.html
-last_built: 2025-08-28T14:29Z
+last_built: 2025-08-28T17:20Z
 urls:
   reference: https://nicholasdavies.github.io/inshiny/reference
   article: https://nicholasdavies.github.io/inshiny/articles
