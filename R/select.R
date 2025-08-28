@@ -110,6 +110,13 @@ select_details = function(id, choices, selected, multiple)
     templ1 = '<li><a class="dropdown-item inshiny-item active" href="#" data-list="TX" data-item="\\1" selected>\\2</a></li>';
     templ0 = stringr::str_replace(templ0, "TX", id)
     templ1 = stringr::str_replace(templ1, "TX", id)
+
+    # Get selected item(s)
+    selected = stringr::str_match(options,
+        '^<option value="([^"]*)" selected>([^<]*)</option>$')[,2]
+    selected = selected[!is.na(selected)]
+
+    # Continue modifying options
     items = stringr::str_replace_all(options, c(
         '^<option value="([^"]*)">([^<]*)</option>$' = templ0,
         '^<option value="([^"]*)" selected>([^<]*)</option>$' = templ1,
@@ -119,7 +126,6 @@ select_details = function(id, choices, selected, multiple)
     items = shiny::HTML(paste0(items, collapse = "\n"))
 
     return (list(items = items, selected = selected))
-
 }
 
 # Select input that supports multiple selections.
