@@ -593,7 +593,10 @@ Shiny.addCustomMessageHandler("inshiny-update", function(message) {
             "off-label": deflt(message.off, $target.data("off-label"))
         });
         if (message.value != null) {
-            $target.prop("checked", message.value);
+            $target[0].checked = message.value;
+            $target[0].dispatchEvent(new Event('change', { bubbles: true }));
+            //console.log("!!!")
+            //$target.prop("checked", message.value);
         }
         set_switch_label($target);
     } else if ($target.hasClass("inshiny-text-form")) {

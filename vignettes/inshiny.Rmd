@@ -134,10 +134,11 @@ server <- function(input, output, session)
         temperature <- cos(2 * pi * xpts / 364) *
             ifelse(input$southern, 1, -1) * as.numeric(input$temp_range) +
             input$avg_temp;
-        par(mar = c(5, 5, 1, 2))
+        oldpar <- par(mar = c(5, 5, 1, 2))
         plot(date, temperature, type = "l", ylim = c(-15, 55),
             col = input$colour %% 16 + 1, lwd = 3)
         abline(h = 0, col = 8, lty = 2)
+        par(oldpar)
     })
 
     observeEvent(input$reset, {
@@ -146,7 +147,6 @@ server <- function(input, output, session)
         update_inline("avg_temp", value = 20)
         update_inline("temp_range", value = "10")
         update_inline("southern", value = FALSE)
-        update_inline("colour", value = 0)
     })
 }
 ```

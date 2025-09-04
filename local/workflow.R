@@ -34,7 +34,6 @@ usethis::use_package("stringr")
 usethis::use_package("bslib")
 usethis::use_package("htmltools")
 usethis::use_package("rlang")
-# usethis::use_package("shinyjs")
 
 # Add vignette
 usethis::use_vignette("inshiny")
@@ -68,4 +67,4 @@ Finish blog post, share on social media, etc.
 Add link to blog post in pkgdown news menu
 
 # What else is missing from here?
-# Rcpp, testthat
+# Rcpp

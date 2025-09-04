@@ -85,22 +85,36 @@ any invalid value gets highlighted in the app as invalid after accounting
 for the new bounds and disallowed values.
 }
 \examples{
-\dontrun{
+# Example UI setup
+ui <- bslib::page_fixed(
+    inline(
+        inline_button("mybutton", "Button"),
+        inline_date("mydate"),
+        inline_link("mylink", "Link"),
+        inline_number("mynumber", 42),
+        inline_select("myselect", letters),
+        inline_slider("myslider", 42, 0, 100),
+        inline_switch("myswitch", TRUE),
+        inline_text("mytext")
+    )
+)
+
 # This covers all updatable attributes except `meaning` (all widgets) and
 # `placeholder` (date, number, slider, text).
-update_inline("mybutton", label = "Click me", icon = shiny::icon("recycle"),
-    accent = "info")
-update_inline("mydate", value = "2026-01-01", min = "2025-01-01",
-    max = "2026-12-31", datesdisabled = "2025-12-25",
-    daysofweekdisabled = c(0, 6))
-update_inline("mylink", label = "Click me", icon = shiny::icon("recycle"),
-    accent = "info")
-update_inline("mynumber", value = 25, min = 20, max = 50, step = 5,
-    default = 25)
-update_inline("myselect", choices = letters[1:5], selected = "c")
-update_inline("myslider", value = 25, min = 20, max = 50, step = 5,
-    default = 25)
-update_inline("myswitch", value = TRUE, on = "Present", off = "Absent")
-update_inline("mytext", value = "Howdy")
+server <- function(input, output) {
+    update_inline("mybutton", label = "Click me", icon = shiny::icon("recycle"),
+        accent = "info")
+    update_inline("mydate", value = "2026-01-01", min = "2025-01-01",
+        max = "2026-12-31", datesdisabled = "2025-12-25",
+        daysofweekdisabled = c(0, 6))
+    update_inline("mylink", label = "Click me", icon = shiny::icon("recycle"),
+        accent = "info")
+    update_inline("mynumber", value = 25, min = 20, max = 50, step = 5,
+        default = 25)
+    update_inline("myselect", choices = letters[1:5], selected = "c")
+    update_inline("myslider", value = 25, min = 20, max = 50, step = 5,
+        default = 25)
+    update_inline("myswitch", value = TRUE, on = "Present", off = "Absent")
+    update_inline("mytext", value = "Howdy")
 }
 }

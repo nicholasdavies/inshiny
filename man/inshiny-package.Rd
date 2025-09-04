@@ -4,9 +4,9 @@
 \name{inshiny-package}
 \alias{inshiny}
 \alias{inshiny-package}
-\title{inshiny: Compact Inline Widgets for 'Shiny' Apps}
+\title{inshiny: Compact Inline Widgets for 'shiny' Apps}
 \description{
-Provides a basic set of compact widgets for Shiny apps which occupy minimum space and appear "inline" with explanatory text.
+Provides a basic set of compact widgets for 'shiny' apps which occupy less space and can appear inline with surrounding text.
 }
 \seealso{
 Useful links:

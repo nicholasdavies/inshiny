@@ -25,24 +25,24 @@ ui <- page_fixed(
         inline_link("reset", "Reset"))
 )
 
-ui <- page_fixed(
-    theme = bs_theme(version = 5, preset = "quartz"),
-    tags$head(tags$style("body { background-image: none }")),
-
-    h1("Temperature plot"),
-
-    plotOutput("plot", width = 480, height = 320),
-
-    br(),
-
-    dateInput("start_date", "Start date", "2025-01-01"),
-    numericInput("num_days", "Number of days", 365),
-    sliderInput("avg_temp", "Average temperature (°C)", 0, 40, 20),
-    selectInput("temp_range", "Temperature range (± °C)", c(5, 10, 15), 10),
-    checkboxInput("southern", "Southern hemisphere", FALSE),
-    actionButton("colour", "Change colour"),
-    actionLink("reset", "Reset"),
-)
+# ui <- page_fixed(
+#     theme = bs_theme(version = 5, preset = "quartz"),
+#     tags$head(tags$style("body { background-image: none }")),
+#
+#     h1("Temperature plot"),
+#
+#     plotOutput("plot", width = 480, height = 320),
+#
+#     br(),
+#
+#     dateInput("start_date", "Start date", "2025-01-01"),
+#     numericInput("num_days", "Number of days", 365),
+#     sliderInput("avg_temp", "Average temperature (°C)", 0, 40, 20),
+#     selectInput("temp_range", "Temperature range (± °C)", c(5, 10, 15), 10),
+#     checkboxInput("southern", "Southern hemisphere", FALSE),
+#     actionButton("colour", "Change colour"),
+#     actionLink("reset", "Reset"),
+# )
 
 server <- function(input, output, session)
 {
@@ -52,10 +52,11 @@ server <- function(input, output, session)
         temperature <- cos(2 * pi * xpts / 364) *
             ifelse(input$southern, 1, -1) * as.numeric(input$temp_range) +
             input$avg_temp;
-        par(mar = c(5, 5, 1, 2))
+        oldpar <- par(mar = c(5, 5, 1, 2))
         plot(date, temperature, type = "l", ylim = c(-15, 55),
             col = input$colour %% 16 + 1, lwd = 3)
         abline(h = 0, col = 8, lty = 2)
+        par(oldpar)
     })
 
     observeEvent(input$reset, {
@@ -64,7 +65,6 @@ server <- function(input, output, session)
         update_inline("avg_temp", value = 20)
         update_inline("temp_range", value = "10")
         update_inline("southern", value = FALSE)
-        update_inline("colour", value = 0)
     })
 }
 
