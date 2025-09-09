@@ -17,6 +17,13 @@ Note that `inshiny` does not currently support use with Shiny's `uiOutput` and
 
 ## Installation
 
+You can install the released version of inshiny from
+[CRAN](https://CRAN.R-project.org/package=inshiny) with:
+
+``` r
+install.packages("inshiny")
+```
+
 You can install the development version of inshiny from
 [GitHub](https://github.com/nicholasdavies/inshiny) with:
 
