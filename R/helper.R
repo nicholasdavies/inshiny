@@ -73,7 +73,8 @@ coalesce = function(html)
     }
 
     for (i in seq_along(html$children)) {
-        html$children[[i]] = coalesce(html$children[[i]])
+        # Allow for `NULL` children
+        html$children[i] = list(coalesce(html$children[[i]]))
     }
 
     return (html)

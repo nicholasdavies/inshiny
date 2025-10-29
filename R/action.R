@@ -36,7 +36,18 @@ inline_link = function(id, label, icon = NULL, meaning = label, accent = NULL)
             } else "inshiny-link")
 
     # Check structure is as expected
-    check_tags(widget, shiny::a(), "shiny::actionLink()")
+    if (packageVersion("shiny") > "1.11.1") {
+        check_tags(
+            widget,
+            shiny::tags$a(
+                if (!is.null(icon)) shiny::tags$span(shiny::tags$i()),
+                shiny::tags$span()
+            ),
+            "shiny::actionLink()"
+        )
+    } else {
+        check_tags(widget, shiny::tags$a(), "shiny::actionLink()")
+    }
 
     return (coalesce(widget))
 }
