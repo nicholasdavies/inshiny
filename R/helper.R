@@ -36,6 +36,35 @@ check_tags = function(html, template, name)
     }
 }
 
+# Version of the above with many possible templates.
+check_tags_multi = function(html, name, ...)
+{
+    templates = list(...)
+
+    result = FALSE
+    if (inherits(html, "shiny.tag")) {
+        for (template in templates)
+        {
+            if (!inherits(template, "shiny.tag")) {
+                result = FALSE
+                break
+            }
+
+            # At least one template should pass...
+            result = result || check_tags0(list(html), list(template))
+            if (result) {
+                break
+            }
+        }
+    }
+
+    if (!result) {
+        stop("Unexpected tag structure from ", name,
+            ". Please contact the package maintainer.")
+    }
+}
+
+
 check_tags0 = function(html, template)
 {
     # Check number of tags
@@ -72,8 +101,12 @@ coalesce = function(html)
         ": ", paste(duplicated(names(html$attribs)), collapse = ", "))
     }
 
-    for (i in seq_along(html$children)) {
-        html$children[[i]] = coalesce(html$children[[i]])
+    for (i in rev(seq_along(html$children))) {
+        if (is.null(html$children[[i]])) {
+            html$children[[i]] = NULL # prune any NULL children
+        } else {
+            html$children[[i]] = coalesce(html$children[[i]])
+        }
     }
 
     return (html)
