@@ -36,13 +36,7 @@ inline_link = function(id, label, icon = NULL, meaning = label, accent = NULL)
             } else "inshiny-link")
 
     # Check structure is as expected
-    check_tags_multi(widget, "shiny::actionLink()",
-        shiny::a(shiny::span(shiny::tags$i()), shiny::span()), # 1.12.0+ label and icon
-        shiny::a(shiny::span()), # 1.12.0+ label, no icon
-        shiny::a(shiny::span(shiny::tags$i())), # 1.12.0+ icon, no label
-        shiny::a(), # 1.12.0+ no label, no icon
-        shiny::a() # 1.11.1 and previous
-    )
+    check_tags(widget, shiny::a(any_tags()), "shiny::actionLink()")
 
     return (coalesce(widget))
 }
@@ -89,14 +83,7 @@ inline_button = function(id, label, icon = NULL, meaning = label, accent = NULL)
         `aria-label` = meaning)
 
     # Check structure is as expected
-    inshiny:::check_tags_multi(widget, "shiny::actionButton()",
-        shiny::tags$button(shiny::span(shiny::tags$i()), shiny::span()), # 1.12.0+ label and icon
-        shiny::tags$button(shiny::span()), # 1.12.0+ label, no icon
-        shiny::tags$button(shiny::span(shiny::tags$i())), # 1.12.0+ icon, no label
-        shiny::tags$button(), # 1.12.0+ no label, no icon
-        shiny::tags$button(shiny::tags$i()), # 1.11.1 and previous, with icon
-        shiny::tags$button() # 1.11.1 and previous, no icon
-    )
+    check_tags(widget, shiny::tags$button(any_tags()), "shiny::actionButton()")
 
     # Modify button
     widget = coalesce(widget)

@@ -21,6 +21,11 @@ noWS = function(html)
     return (html)
 }
 
+any_tags = function()
+{
+    shiny::tag("any", list())
+}
+
 # Confirm that an html object conforms to the same structure as a template.
 check_tags = function(html, template, name)
 {
@@ -36,37 +41,11 @@ check_tags = function(html, template, name)
     }
 }
 
-# Version of the above with many possible templates.
-check_tags_multi = function(html, name, ...)
-{
-    templates = list(...)
-
-    result = FALSE
-    if (inherits(html, "shiny.tag")) {
-        for (template in templates)
-        {
-            if (!inherits(template, "shiny.tag")) {
-                result = FALSE
-                break
-            }
-
-            # At least one template should pass...
-            result = result || check_tags0(list(html), list(template))
-            if (result) {
-                break
-            }
-        }
-    }
-
-    if (!result) {
-        stop("Unexpected tag structure from ", name,
-            ". Please contact the package maintainer.")
-    }
-}
-
-
 check_tags0 = function(html, template)
 {
+    # Allow skip
+    if (length(template) == 1 && template[[1]]$name == "any") return (TRUE)
+
     # Check number of tags
     tags_idx = which(vapply(html, function(t) inherits(t, "shiny.tag"), logical(1)))
     if (length(tags_idx) != length(template)) return (FALSE)
