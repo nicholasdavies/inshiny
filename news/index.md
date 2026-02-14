@@ -2,6 +2,8 @@
 
 ## inshiny (development version)
 
+## inshiny 0.1.2
+
 - Changed to use htmltools::tagQuery for tag editing, and modified
   check_tags() so it only runs during continuous integration. These are
   changes in internal details that doesn’t affect users of the package,
