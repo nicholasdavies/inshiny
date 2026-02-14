@@ -7,3 +7,9 @@ test_that("helpers catch errors", {
     expect_error(check_tags(shiny::div(shiny::div(), shiny::div()), shiny::div(shiny::div()), "testthat"))
     expect_error(coalesce(shiny::div(style = "1", style = "2")))
 })
+
+test_that("boolean works", {
+    expect_identical(boolean(NA), "mixed")
+    expect_identical(boolean(TRUE), "true")
+    expect_identical(boolean(FALSE), "false")
+})
