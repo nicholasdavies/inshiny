@@ -1,3 +1,9 @@
+# Returns TRUE if we are in continuous integration.
+in_CI = function()
+{
+    Sys.getenv("CI") != ""
+}
+
 # Some helper functions for argument validation.
 is_number = function(x)
 {
@@ -29,15 +35,17 @@ any_tags = function()
 # Confirm that an html object conforms to the same structure as a template.
 check_tags = function(html, template, name)
 {
-    if (!inherits(html, "shiny.tag") || !inherits(template, "shiny.tag")) {
-        stop("Unexpected tag structure from ", name,
-            ". Please contact the package maintainer.")
-    }
+    if (in_CI()) {
+        if (!inherits(html, "shiny.tag") || !inherits(template, "shiny.tag")) {
+            stop("Unexpected tag structure from ", name,
+                ". Please contact the package maintainer.")
+        }
 
-    result = check_tags0(list(html), list(template))
-    if (!result) {
-        stop("Unexpected tag structure from ", name,
-            ". Please contact the package maintainer.")
+        result = check_tags0(list(html), list(template))
+        if (!result) {
+            stop("Unexpected tag structure from ", name,
+                ". Please contact the package maintainer.")
+        }
     }
 }
 
