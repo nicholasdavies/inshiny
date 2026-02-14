@@ -6,7 +6,7 @@
     Output
       <span class="dropdown-center">
         <span class="inshiny-text-container" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-          <span id="slider_id" class="inshiny-nofocus inshiny-text-form inshiny-number-form inshiny-with-slider" contenteditable tabindex="0" role="spinbutton" aria-placeholder="Enter a number" aria-label="Favourite number" aria-valuenow="42" aria-valuemin="1" aria-valuemax="100" data-default="99" data-min="1" data-max="100" data-step="1">42</span>
+          <span id="slider_id" class="inshiny-nofocus inshiny-text-form inshiny-number-form inshiny-with-slider" contenteditable tabindex="0" aria-placeholder="Enter a number" aria-label="Favourite number" role="spinbutton" aria-valuenow="42" aria-valuemin="1" aria-valuemax="100" data-default="99" data-min="1" data-max="100" data-step="1">42</span>
           <span class="inshiny-text-placeholder text-info" aria-hidden="true">Enter a number</span>
           <span class="form-control inshiny-text-box" aria-hidden="true"></span>
           <span class="inshiny-text-rightpadding" aria-hidden="true"></span>

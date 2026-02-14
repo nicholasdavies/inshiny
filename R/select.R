@@ -60,18 +60,24 @@ inline_select = function(id, choices, selected = NULL, multiple = FALSE, meaning
     textbox = inline_text(id, details$selected, placeholder = NULL, meaning = meaning)
 
     # Modify textbox
-    textbox = coalesce(textbox)
-    change_attrib(textbox, NULL, "id", drop_id)
-    change_attrib(textbox, NULL, "data-bs-toggle", "dropdown")
-    change_attrib(textbox, NULL, "data-bs-auto-close", "outside")
-    change_attrib(textbox, NULL, "aria-expanded", "false")
-    append_class(textbox, 1, "inshiny-list-form")
-    append_class(textbox, 1, "inshiny-with-options")
+    tq = htmltools::tagQuery(textbox)
+    tq$addAttrs(
+        "id" = drop_id,
+        "data-bs-toggle" = "dropdown",
+        "data-bs-auto-close" = "outside",
+        "aria-expanded" = "false"
+    )
+    tq$find(".inshiny-text-form")$
+        addClass("inshiny-list-form")$
+        addClass("inshiny-with-options")$
+        removeAttrs("contenteditable")
+    textbox = tq$allTags()
 
-    # TODO TEMP no data-default/data-value, remove contenteditable
-    # change_attrib(textbox, 1, "data-default", details$selected)
-    # change_attrib(textbox, 1, "data-value", details$selected)
-    change_attrib(textbox, 1, "contenteditable", NULL)
+    # TODO I had this comment previously (editing .inshiny-text-form)
+    # # TODO TEMP no data-default/data-value, remove contenteditable
+    # # change_attrib(textbox, 1, "data-default", details$selected)
+    # # change_attrib(textbox, 1, "data-value", details$selected)
+    # change_attrib(textbox, 1, "contenteditable", NULL)
 
     # Make menu
     menu = shiny::tags$ul(
@@ -90,8 +96,8 @@ inline_select = function(id, choices, selected = NULL, multiple = FALSE, meaning
 select_details = function(id, choices, selected, multiple)
 {
     # Build shiny::selectInput to get formatted options
-    widget = shiny::selectInput(inputId = id, label = NULL, choices = choices,
-        selected = selected, multiple = multiple, selectize = FALSE)
+    widget = coalesce(shiny::selectInput(inputId = id, label = NULL, choices = choices,
+        selected = selected, multiple = multiple, selectize = FALSE))
 
     # Check structure is as expected
     check_tags(widget, shiny::div(
@@ -133,8 +139,8 @@ inline_selectize = function(id, choices, selected = NULL, multiple = FALSE,
     meaning = NULL)
 {
     # Make base select
-    widget = shiny::selectInput(inputId = id, label = NULL, choices = choices,
-        selected = selected, multiple = multiple)
+    widget = coalesce(shiny::selectInput(inputId = id, label = NULL, choices = choices,
+        selected = selected, multiple = multiple))
     dep = attr(widget, "html_dependencies")
 
     # Check structure is as expected
@@ -148,9 +154,11 @@ inline_selectize = function(id, choices, selected = NULL, multiple = FALSE,
 
     # Modify select
     # TODO ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role
-    widget = coalesce(widget)$children[[2]]
-    append_class(widget, NULL, "inshiny-sel")
-    change_attrib(widget, 1, "aria-label", meaning)
+    widget = widget$children[[2]]
+    tq = htmltools::tagQuery(widget)
+    tq$addClass("inshiny-sel")
+    tq$find(".shiny-input-select")$addAttrs("aria-label" = meaning)
+    widget = tq$allTags()
 
     # Construct spacer with set width
     spacer = shiny::span(class = "inshiny-sel-spacer", style = "width: 500px")

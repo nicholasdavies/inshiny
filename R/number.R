@@ -37,15 +37,21 @@ inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/spinbutton_role
     widget = inline_text(id = id, value = value, placeholder = placeholder,
         meaning = meaning)
-    append_class(widget, 1, "inshiny-number-form")
-    change_attrib(widget, 1, "role", "spinbutton")
-    change_attrib(widget, 1, "aria-valuenow", value)
-    change_attrib(widget, 1, "aria-valuemin", min)
-    change_attrib(widget, 1, "aria-valuemax", max)
-    change_attrib(widget, 1, "data-default", default)
-    change_attrib(widget, 1, "data-min", min)
-    change_attrib(widget, 1, "data-max", max)
-    change_attrib(widget, 1, "data-step", step)
+    tq = htmltools::tagQuery(widget)
+    tq$find(".inshiny-text-form")$ # get edit box
+        addClass("inshiny-number-form")$
+        removeAttrs("role")$
+        addAttrs(
+            "role" = "spinbutton",
+            "aria-valuenow" = value,
+            "aria-valuemin" = min,
+            "aria-valuemax" = max,
+            "data-default" = default,
+            "data-min" = min,
+            "data-max" = max,
+            "data-step" = step
+        )
+    widget = tq$allTags()
 
     shiny::span(
         shiny::div(class = "inshiny-arrows",

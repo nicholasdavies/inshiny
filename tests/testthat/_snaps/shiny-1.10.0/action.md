@@ -16,7 +16,7 @@
       accent = "danger"))
     Output
       <span class="btn btn-danger inshiny-btn-container">
-        <button id="btn_id" type="button" class="btn action-button btn-danger inshiny-btn" aria-label="Play button">
+        <button id="btn_id" class="btn action-button btn-danger inshiny-btn" aria-label="Play button" type="button">
           <i class="fas fa-play" role="presentation" aria-label="play icon"></i>
           Play
         </button>

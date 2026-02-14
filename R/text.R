@@ -27,8 +27,8 @@ inline_text = function(id, value = "", placeholder = "Enter text", meaning = NUL
     }
 
     # Make base text input
-    widget = shiny::textInput(inputId = id, label = NULL, value = value,
-        width = NULL, placeholder = placeholder, updateOn = "change")
+    widget = coalesce(shiny::textInput(inputId = id, label = NULL, value = value,
+        width = NULL, placeholder = placeholder, updateOn = "change"))
 
     # Check structure is as expected
     check_tags(widget, shiny::div(shiny::tags$label(), shiny::tags$input()),
@@ -36,27 +36,36 @@ inline_text = function(id, value = "", placeholder = "Enter text", meaning = NUL
 
     # Modify text input
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/textbox_role
-    widget = coalesce(widget)
-    change_name(widget, NULL, "span") # change outer div to span
-    remove_class(widget, NULL, c("form-group", "shiny-input-container")) # remove padding
-    append_class(widget, NULL, "inshiny-text-container") # text container class
-    remove_child(widget, 1) # remove label
-    change_name(widget, 1, "span") # input to span
-    remove_class(widget, 1, c("shiny-input-text", "form-control")) # remove shiny input classes
-    append_class(widget, 1, c("inshiny-nofocus", "inshiny-text-form")) # add inshiny input classes
-    change_attrib(widget, 1, "type", NULL)
-    change_attrib(widget, 1, "value", NULL)
-    change_attrib(widget, 1, "placeholder", NULL)
-    change_attrib(widget, 1, "data-update-on", NULL) # remove attributes
-    change_attrib(widget, 1, "contenteditable", NA) # add contenteditable
-    change_attrib(widget, 1, "tabindex", 0) # ensure tabbable
-    change_attrib(widget, 1, "role", "textbox") # accessibility
-    change_attrib(widget, 1, "aria-placeholder", placeholder) # accessibility
-    change_attrib(widget, 1, "aria-label", meaning) # accessibility
-    insert_child(widget, c(1, 1), value) # add contents of text control
-    insert_child(widget, 2, shiny::span(class = "inshiny-text-placeholder text-info", `aria-hidden` = "true", placeholder))
-    insert_child(widget, 3, shiny::span(class = "form-control inshiny-text-box", `aria-hidden` = "true"))
-    insert_child(widget, 4, shiny::span(class = "inshiny-text-rightpadding", `aria-hidden` = "true"))
+    tq = htmltools::tagQuery(widget)
+    tq$each(rename_tag("span"))$ # change outer div to span
+        removeClass("form-group")$
+        removeClass("shiny-input-container")$ # remove padding
+        addClass("inshiny-text-container") # text container class
+
+    tq$find("label")$remove() # remove label
+    tq$find("input")$
+        each(rename_tag("span"))$ # input to span
+        removeClass("shiny-input-text")$
+        removeClass("form-control")$ # remove shiny input classes
+        addClass("inshiny-nofocus")$
+        addClass("inshiny-text-form")$ # add inshiny input classes
+        removeAttrs(c("type", "value", "placeholder", "data-update-on"))$ # remove attributes
+        addAttrs(
+            "contenteditable" = NA, # add contenteditable
+            "tabindex" = 0, # ensure tabbable
+            "role" = "textbox", # accessibility
+            "aria-placeholder" = placeholder, # accessibility
+            "aria-label" = meaning # accessibility
+        )
+    widget = tq$allTags()
+    widget$children[[1]]$children = list(value)
+    widget$children = c(widget$children,
+        list(
+            shiny::span(class = "inshiny-text-placeholder text-info", `aria-hidden` = "true", placeholder),
+            shiny::span(class = "form-control inshiny-text-box", `aria-hidden` = "true"),
+            shiny::span(class = "inshiny-text-rightpadding", `aria-hidden` = "true")
+        )
+    )
 
     return (widget)
 }

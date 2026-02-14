@@ -32,8 +32,8 @@ inline_switch = function(id, value, on = "On", off = "Off",
     label_id = paste0("inshiny-switch-label-", id)
 
     # Make base switch
-    widget = bslib::input_switch(id = id, label = NULL,
-        value = value, width = NULL)
+    widget = coalesce(bslib::input_switch(id = id, label = NULL,
+        value = value, width = NULL))
 
     # Check structure is as expected
     check_tags(widget,
@@ -42,19 +42,29 @@ inline_switch = function(id, value, on = "On", off = "Off",
 
     # Modify switch
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/switch_role
-    widget = coalesce(widget)
-    change_name(widget, NULL, "span") # change div to span
-    remove_class(widget, NULL, c("form-group", "shiny-input-container")) # remove padding
-    change_name(widget, 1, "span") # change inner div to span
-    append_class(widget, 1, "inshiny-switch-container") # mark as inshiny switch container for styling
-    append_class(widget, c(1, 1), "inshiny-switch") # mark as inshiny switch for styling / JS
-    change_attrib(widget, c(1, 1), "aria-label", meaning) # accessibility
-    change_attrib(widget, c(1, 1), "aria-checked", value) # accessibility
-    change_attrib(widget, c(1, 1), "data-label-id", label_id) # attributes for JS
-    change_attrib(widget, c(1, 1), "data-on-label", on) # ditto
-    change_attrib(widget, c(1, 1), "data-off-label", off) # ditto
-    remove_child(widget, c(1, 2)) # delete <label>
-    insert_child(widget, 2, shiny::span(id = label_id, if (value) on else off)) # insert status label
+    tq = htmltools::tagQuery(widget)
 
-    return (widget)
+    tq$each(rename_tag("span"))$ # top-level <div>: change to span
+        removeClass(c("form-group", "shiny-input-container")) # remove padding
+
+    tq$find(".bslib-input-switch")$ # get inner <div>
+        addClass("inshiny-switch-container")$ # mark as inshiny switch container for styling
+        each(rename_tag("span")) # change to span
+
+    tq$find(".bslib-input-switch > input")$ # get <input> tag
+        addClass("inshiny-switch")$ # mark as inshiny switch for styling/JS
+        addAttrs(
+            "aria-label" = meaning, # accessibility
+            "aria-checked" = boolean(value), # accessibility
+            "data-label-id" = label_id, # attributes for JS
+            "data-on-label" = on, # attributes for JS
+            "data-off-label" = off # attributes for JS
+        )
+
+    tq$find(".bslib-input-switch > label")$remove() # remove <label> tag
+
+    tq$append(shiny::span(id = label_id, if (value) on else off)) # insert status label
+
+    # Return modified tag
+    tq$allTags()
 }

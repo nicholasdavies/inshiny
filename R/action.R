@@ -30,15 +30,15 @@ inline_link = function(id, label, icon = NULL, meaning = label, accent = NULL)
 {
     # Make base link
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role
-    widget = shiny::actionLink(inputId = id, label = label, icon = icon,
+    widget = coalesce(shiny::actionLink(inputId = id, label = label, icon = icon,
         `aria-label` = meaning, class = if (!is.null(accent)) {
                 paste0("inshiny-link ", paste0("link-", accent, collapse = " "))
-            } else "inshiny-link")
+            } else "inshiny-link"))
 
     # Check structure is as expected
     check_tags(widget, shiny::a(any_tags()), "shiny::actionLink()")
 
-    return (coalesce(widget))
+    return (widget)
 }
 
 #' Inline action button
@@ -79,18 +79,20 @@ inline_button = function(id, label, icon = NULL, meaning = label, accent = NULL)
 
     # Make base button
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role
-    widget = shiny::actionButton(inputId = id, label = label, icon = icon,
-        `aria-label` = meaning)
+    widget = coalesce(shiny::actionButton(inputId = id, label = label, icon = icon,
+        `aria-label` = meaning))
 
     # Check structure is as expected
     check_tags(widget, shiny::tags$button(any_tags()), "shiny::actionButton()")
 
     # Modify button
-    widget = coalesce(widget)
-    remove_class(widget, NULL, "btn-default")
-    append_class(widget, NULL, accent_class)
-    append_class(widget, NULL, "inshiny-btn")
-    change_attrib(widget, NULL, "type", "button")
+    tq = htmltools::tagQuery(widget)
+    tq$removeClass("btn-default")$
+        addClass(accent_class)$
+        addClass("inshiny-btn")$
+        removeAttrs("type")$
+        addAttrs("type" = "button")
+    widget = tq$allTags()
 
     # Construct spacer with same contents as button
     spacer = shiny::span(class = "inshiny-btn-spacer")

@@ -1,3 +1,20 @@
+# Helper to rename a tag using tagQuery
+rename_tag = function(new_name) function(el, i) {
+    el$name = new_name
+    el
+}
+
+# Helper to render TRUE or FALSE as "true" or "false" for ARIA
+boolean = function(tf)
+{
+    if (is.na(tf))
+        "mixed"
+    else if (tf)
+        "true"
+    else
+        "false"
+}
+
 # Returns TRUE if we are in continuous integration.
 in_CI = function()
 {

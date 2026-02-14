@@ -65,22 +65,29 @@ inline_date = function(id, value = NULL, min = NULL, max = NULL,
     textbox = inline_text(id, value, placeholder = placeholder, meaning = meaning)
 
     # Modify textbox
-    textbox = coalesce(textbox)
-    change_attrib(textbox, NULL, "id", drop_id)
-    change_attrib(textbox, NULL, "data-bs-toggle", "dropdown")
-    change_attrib(textbox, NULL, "data-bs-auto-close", "outside")
-    change_attrib(textbox, NULL, "aria-expanded", "false")
-    append_class(textbox, 1, "inshiny-date-form")
-    append_class(textbox, 1, "inshiny-with-datepicker")
-    change_attrib(textbox, 1, "data-default", value)
-    change_attrib(textbox, 1, "data-value", value)
+    tq = htmltools::tagQuery(textbox)
+    tq$addAttrs(
+        "id" = drop_id,
+        "data-bs-toggle" = "dropdown",
+        "data-bs-auto-close" = "outside",
+        "aria-expanded" = "false"
+    )
+
+    tq$find(".inshiny-text-form")$ # get edit box
+        addClass("inshiny-date-form")$
+        addClass("inshiny-with-datepicker")$
+        addAttrs(
+            "data-default" = value,
+            "data-value" = value
+        )
+    textbox = tq$allTags()
 
     # Get datepicker widget.
     # Note: autoclose set below (as data-autoclose, not data-date-autoclose).
-    datepicker = shiny::dateInput(datepicker_id, label = NULL, value = value,
+    datepicker = coalesce(shiny::dateInput(datepicker_id, label = NULL, value = value,
         min = min, max = max, format = format, startview = startview,
         weekstart = weekstart, language = language, width = NULL, autoclose = FALSE,
-        datesdisabled = datesdisabled, daysofweekdisabled = daysofweekdisabled)
+        datesdisabled = datesdisabled, daysofweekdisabled = daysofweekdisabled))
 
     # Check structure is as expected
     check_tags(datepicker, shiny::div(shiny::tags$label(), shiny::tags$input()),
@@ -88,14 +95,15 @@ inline_date = function(id, value = NULL, min = NULL, max = NULL,
 
     # Modify widget
     dependencies = datepicker$children[[3]]
-    datepicker = coalesce(datepicker$children[[2]])
-    change_name(datepicker, NULL, "div")
-    change_attrib(datepicker, NULL, "id", datepicker_id)
-    change_attrib(datepicker, NULL, "type", NULL)
-    change_attrib(datepicker, NULL, "aria-labelledby", NULL)
-    change_attrib(datepicker, NULL, "data-autoclose", autoclose)
-    remove_class(datepicker, NULL, "form-control")
-    append_class(datepicker, NULL, "inshiny-datepicker")
+    datepicker = datepicker$children[[2]]
+
+    tq = htmltools::tagQuery(datepicker)
+    tq$each(rename_tag("div"))$ # top-level <input>: change to <div>
+        addAttrs("id" = datepicker_id, "data-autoclose" = boolean(autoclose))$
+        removeAttrs(c("type", "aria-labelledby"))$
+        removeClass("form-control")$
+        addClass("inshiny-datepicker")
+    datepicker = tq$allTags()
 
     shiny::span(class = "dropdown-center",
         textbox,

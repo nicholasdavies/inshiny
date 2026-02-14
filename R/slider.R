@@ -47,20 +47,26 @@ inline_slider = function(id, value, min, max, step = NULL, default = value,
         meaning = meaning)$children[[2]]
 
     # Modify textbox
-    textbox = coalesce(textbox)
-    change_attrib(textbox, NULL, "data-bs-toggle", "dropdown")
-    change_attrib(textbox, NULL, "data-bs-auto-close", "outside")
-    change_attrib(textbox, NULL, "aria-expanded", "false") # Gets updated by Bootstrap automatically
-    append_class(textbox, 1, "inshiny-with-slider")
+    tq = htmltools::tagQuery(textbox)
+    tq$addAttrs(
+        "data-bs-toggle" = "dropdown",
+        "data-bs-auto-close" = "outside",
+        "aria-expanded" = "false" # Gets updated by Bootstrap automatically
+    )
+    tq$find(".inshiny-number-form")$
+        addClass("inshiny-with-slider")
+    textbox = tq$allTags()
 
     # Get slider widget
-    slider = shiny::sliderInput(slider_id, label = NULL, min = min, max = max, value = value, step = step)
+    slider = coalesce(shiny::sliderInput(slider_id, label = NULL,
+        min = min, max = max, value = value, step = step))
 
     # Modify widget
     # Note, needs label
-    slider = coalesce(slider)
-    remove_class(slider, NULL, "form-group")
-    append_class(slider, 1, "inshiny-slider")
+    tq = htmltools::tagQuery(slider)
+    tq$removeClass("form-group")
+    tq$find("label")$addClass("inshiny-slider")
+    slider = tq$allTags()
 
     shiny::span(class = "dropdown-center",
         textbox,
