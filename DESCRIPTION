@@ -1,7 +1,7 @@
 Package: inshiny
 Type: Package
 Title: Compact Inline Widgets for 'shiny' Apps
-Version: 0.1.1.9000
+Version: 0.1.2
 Authors@R: person("Nick", "Davies", email = "nicholas.davies@lshtm.ac.uk", role = c("aut", "cre"))
 Description: Provides a basic set of compact widgets for 'shiny' apps which
  occupy less space and can appear inline with surrounding text.
