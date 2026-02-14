@@ -1,3 +1,5 @@
+# inshiny (development version)
+
 # inshiny 0.1.2
 
 * Changed to use htmltools::tagQuery for tag editing, and modified check_tags() 
