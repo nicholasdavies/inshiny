@@ -17,8 +17,9 @@ inline_number(
   step = NULL,
   default = value,
   placeholder = "Enter number",
-  arrows = TRUE,
-  meaning = NULL
+  meaning = NULL,
+  max_width = "10em",
+  arrows = TRUE
 )
 ```
 
@@ -53,15 +54,22 @@ inline_number(
   The character string or HTML element that will appear in the textbox
   when it is empty, as a prompt.
 
-- arrows:
-
-  Whether to show clickable arrows that can be used to adjust the number
-  up or down.
-
 - meaning:
 
   A descriptive label, for people using assistive technology such as
   screen readers.
+
+- max_width:
+
+  The maximum width of the text input as a CSS length (e.g. `"10em"`,
+  `"200px"`). When the text is longer than this, the input becomes
+  horizontally scrollable. The default is `"10em"`. Use `NULL` for no
+  limit.
+
+- arrows:
+
+  Whether to show clickable arrows that can be used to adjust the number
+  up or down.
 
 ## Value
 

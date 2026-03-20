@@ -50,6 +50,7 @@ can be included in an <code><a href="inline.html">inline()</a></code> wrapper.</
 <span>  max <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  placeholder <span class="op">=</span> <span class="st">"Enter date"</span>,</span>
 <span>  meaning <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_width <span class="op">=</span> <span class="st">"10em"</span>,</span>
 <span>  format <span class="op">=</span> <span class="st">"yyyy-mm-dd"</span>,</span>
 <span>  startview <span class="op">=</span> <span class="st">"month"</span>,</span>
 <span>  weekstart <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -88,6 +89,13 @@ the textbox when it is empty, as a prompt.</p></dd>
 <dt id="arg-meaning">meaning<a class="anchor" aria-label="anchor" href="#arg-meaning"></a></dt>
 <dd><p>A descriptive label, for people using assistive technology
 such as screen readers.</p></dd>
+
+
+<dt id="arg-max-width">max_width<a class="anchor" aria-label="anchor" href="#arg-max-width"></a></dt>
+<dd><p>The maximum width of the text input as a CSS length
+(e.g. <code>"10em"</code>, <code>"200px"</code>). When the text is longer than this, the
+input becomes horizontally scrollable. The default is <code>"10em"</code>. Use
+<code>NULL</code> for no limit.</p></dd>
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>

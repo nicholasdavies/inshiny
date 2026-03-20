@@ -16,6 +16,7 @@ inline_date(
   max = NULL,
   placeholder = "Enter date",
   meaning = NULL,
+  max_width = "10em",
   format = "yyyy-mm-dd",
   startview = "month",
   weekstart = 0,
@@ -52,6 +53,13 @@ inline_date(
 
   A descriptive label, for people using assistive technology such as
   screen readers.
+
+- max_width:
+
+  The maximum width of the text input as a CSS length (e.g. `"10em"`,
+  `"200px"`). When the text is longer than this, the input becomes
+  horizontally scrollable. The default is `"10em"`. Use `NULL` for no
+  limit.
 
 - format:
 

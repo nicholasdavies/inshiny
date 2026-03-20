@@ -9,7 +9,13 @@ wrapper.
 ## Usage
 
 ``` r
-inline_text(id, value = "", placeholder = "Enter text", meaning = NULL)
+inline_text(
+  id,
+  value = "",
+  placeholder = "Enter text",
+  meaning = NULL,
+  max_width = "10em"
+)
 ```
 
 ## Arguments
@@ -31,6 +37,13 @@ inline_text(id, value = "", placeholder = "Enter text", meaning = NULL)
 
   A descriptive label, for people using assistive technology such as
   screen readers.
+
+- max_width:
+
+  The maximum width of the text input as a CSS length (e.g. `"10em"`,
+  `"200px"`). When the text is longer than this, the input becomes
+  horizontally scrollable. The default is `"10em"`. Use `NULL` for no
+  limit.
 
 ## Value
 

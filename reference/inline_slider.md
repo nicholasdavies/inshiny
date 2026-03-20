@@ -17,7 +17,8 @@ inline_slider(
   step = NULL,
   default = value,
   placeholder = "Enter number",
-  meaning = NULL
+  meaning = NULL,
+  max_width = "10em"
 )
 ```
 
@@ -53,6 +54,13 @@ inline_slider(
 
   A descriptive label, for people using assistive technology such as
   screen readers.
+
+- max_width:
+
+  The maximum width of the text input as a CSS length (e.g. `"10em"`,
+  `"200px"`). When the text is longer than this, the input becomes
+  horizontally scrollable. The default is `"10em"`. Use `NULL` for no
+  limit.
 
 ## Value
 
