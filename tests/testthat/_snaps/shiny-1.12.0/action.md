@@ -1,16 +1,3 @@
-# link is stable
-
-    Code
-      cc(inline_link("link_id", label = "Link", icon = shiny::icon("gears"), meaning = "A link",
-      accent = c("success", "underline-warning")))
-    Output
-      <a id="link_id" href="#" class="action-button action-link inshiny-link link-success link-underline-warning" aria-label="A link">
-        <span class="action-icon">
-          <i class="fas fa-gears" role="presentation" aria-label="gears icon"></i>
-        </span>
-        <span class="action-label">Link</span>
-      </a>
-
 # button is stable
 
     Code
