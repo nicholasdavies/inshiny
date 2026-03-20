@@ -2,6 +2,15 @@
 
 ## inshiny (development version)
 
+- Made the arrow elements within inline_number() optional and fixed a
+  spacing issue when inline_number() appeared in a flex layout.
+
+- Fixed some slight spacing differences when inline elements appeared in
+  a page_sidebar() versus a page_fixed().
+
+- Fixed a bug in which borders around input elements wouldn’t appear
+  within a card or accordion panel.
+
 ## inshiny 0.1.2
 
 CRAN release: 2026-02-14
