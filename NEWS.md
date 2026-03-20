@@ -1,4 +1,6 @@
-# inshiny (development version)
+# inshiny 0.1.3
+
+* Updated tests for shiny 1.13.0.
 
 * Made the arrow elements within inline_number() optional and fixed a spacing
   issue when inline_number() appeared in a flex layout.
