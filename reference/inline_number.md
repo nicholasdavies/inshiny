@@ -17,6 +17,7 @@ inline_number(
   step = NULL,
   default = value,
   placeholder = "Enter number",
+  arrows = TRUE,
   meaning = NULL
 )
 ```
@@ -51,6 +52,11 @@ inline_number(
 
   The character string or HTML element that will appear in the textbox
   when it is empty, as a prompt.
+
+- arrows:
+
+  Whether to show clickable arrows that can be used to adjust the number
+  up or down.
 
 - meaning:
 
