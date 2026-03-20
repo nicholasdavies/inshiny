@@ -38,6 +38,26 @@ inline(..., class = "mb-1")
 
 An HTML element to be included in your Shiny UI definition.
 
+## Note on rendering
+
+Inline widgets from inshiny are typically displayed with borders around
+them to show that they are editable. For the borders to display
+correctly, inshiny includes some custom CSS to make sure the borders
+work inside common
+[bslib](https://rstudio.github.io/bslib/reference/bslib-package.html)
+containers such as
+[`bslib::card()`](https://rstudio.github.io/bslib/reference/card.html)
+and
+[`bslib::accordion_panel()`](https://rstudio.github.io/bslib/reference/accordion.html).
+However, if you place inline widgets inside a custom container that has
+its own opaque background (e.g. a `div` with `background-color` set),
+the border around widgets may disappear. To fix this, add the CSS class
+`"inshiny-bg"` to the container:
+
+    tags$div(class = "inshiny-bg", style = "background-color: white;",
+        inline("Enter a value: ", inline_text("val", "hello"))
+    )
+
 ## Examples
 
 ``` r

@@ -72,6 +72,23 @@ string.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An HTML element to be included in your Shiny UI definition.</p>
     </div>
+    <div class="section level2">
+    <h2 id="note-on-rendering">Note on rendering<a class="anchor" aria-label="anchor" href="#note-on-rendering"></a></h2>
+
+
+
+<p>Inline widgets from inshiny are typically displayed with borders around them
+to show that they are editable. For the borders to display correctly, inshiny
+includes some custom CSS to make sure the borders work inside common <a href="https://rstudio.github.io/bslib/reference/bslib-package.html" class="external-link">bslib</a>
+containers such as <code><a href="https://rstudio.github.io/bslib/reference/card.html" class="external-link">bslib::card()</a></code> and <code><a href="https://rstudio.github.io/bslib/reference/accordion.html" class="external-link">bslib::accordion_panel()</a></code>. However,
+if you place inline widgets inside a custom container that has its own opaque
+background (e.g. a <code>div</code> with <code>background-color</code> set), the border around
+widgets may disappear. To fix this, add the CSS class <code>"inshiny-bg"</code> to the
+container:</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>tags<span class="sc">$</span><span class="fu">div</span>(<span class="at">class =</span> <span class="st">"inshiny-bg"</span>, <span class="at">style =</span> <span class="st">"background-color: white;"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>    <span class="fu">inline</span>(<span class="st">"Enter a value: "</span>, <span class="fu">inline_text</span>(<span class="st">"val"</span>, <span class="st">"hello"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>)</span></code></pre><p></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
