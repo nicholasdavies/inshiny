@@ -1,5 +1,8 @@
 # inshiny (development version)
 
+* Fixed some slight spacing differences when inline elements appeared in a 
+  page_sidebar() versus a page_fixed().
+
 * Fixed a bug in which borders around input elements wouldn't appear within a
   card or accordion panel.
 

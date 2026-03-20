@@ -10,6 +10,16 @@
     border-color: var(--bs-danger);
 }
 
+/* When inside a bslib gap-spacing container (e.g. page_sidebar), counteract
+   the flex gap between consecutive inline elements so they remain tightly
+   spaced like regular text lines. */
+.bslib-gap-spacing > .inshiny-inline {
+    margin-bottom: 0 !important;
+}
+.bslib-gap-spacing > .inshiny-inline + .inshiny-inline {
+    margin-top: calc(-1 * var(--bslib-mb-spacer, 1rem) + 0.2rem);
+}
+
 
 /* BUTTON INPUT */
 
@@ -162,7 +172,7 @@
 .inshiny-arrows {
     display: inline-block;
     width: 0.8em;
-    height: 100%;
+    height: auto;
     vertical-align: text-top;
 }
 
