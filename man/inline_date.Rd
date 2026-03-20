@@ -11,6 +11,7 @@ inline_date(
   max = NULL,
   placeholder = "Enter date",
   meaning = NULL,
+  max_width = "10em",
   format = "yyyy-mm-dd",
   startview = "month",
   weekstart = 0,
@@ -36,6 +37,11 @@ the textbox when it is empty, as a prompt.}
 
 \item{meaning}{A descriptive label, for people using assistive technology
 such as screen readers.}
+
+\item{max_width}{The maximum width of the text input as a CSS length
+(e.g. \code{"10em"}, \code{"200px"}). When the text is longer than this, the
+input becomes horizontally scrollable. The default is \code{"10em"}. Use
+\code{NULL} for no limit.}
 
 \item{format}{The format of the date to display in the browser; defaults to
 "yyyy-mm-dd". Note that this is only for display purposes. Changing the

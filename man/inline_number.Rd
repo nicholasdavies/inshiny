@@ -12,8 +12,9 @@ inline_number(
   step = NULL,
   default = value,
   placeholder = "Enter number",
-  arrows = TRUE,
-  meaning = NULL
+  meaning = NULL,
+  max_width = "10em",
+  arrows = TRUE
 )
 }
 \arguments{
@@ -34,11 +35,16 @@ respectively. The default step is 1.}
 \item{placeholder}{The character string or HTML element that will appear in
 the textbox when it is empty, as a prompt.}
 
-\item{arrows}{Whether to show clickable arrows that can be used to adjust
-the number up or down.}
-
 \item{meaning}{A descriptive label, for people using assistive technology
 such as screen readers.}
+
+\item{max_width}{The maximum width of the text input as a CSS length
+(e.g. \code{"10em"}, \code{"200px"}). When the text is longer than this, the
+input becomes horizontally scrollable. The default is \code{"10em"}. Use
+\code{NULL} for no limit.}
+
+\item{arrows}{Whether to show clickable arrows that can be used to adjust
+the number up or down.}
 }
 \value{
 An inline widget to be included in an \code{\link[=inline]{inline()}} wrapper.

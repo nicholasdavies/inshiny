@@ -12,7 +12,8 @@ inline_slider(
   step = NULL,
   default = value,
   placeholder = "Enter number",
-  meaning = NULL
+  meaning = NULL,
+  max_width = "10em"
 )
 }
 \arguments{
@@ -32,6 +33,11 @@ the textbox when it is empty, as a prompt.}
 
 \item{meaning}{A descriptive label, for people using assistive technology
 such as screen readers.}
+
+\item{max_width}{The maximum width of the text input as a CSS length
+(e.g. \code{"10em"}, \code{"200px"}). When the text is longer than this, the
+input becomes horizontally scrollable. The default is \code{"10em"}. Use
+\code{NULL} for no limit.}
 }
 \value{
 An inline widget to be included in an \code{\link[=inline]{inline()}} wrapper.
