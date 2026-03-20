@@ -27,7 +27,8 @@
 #' )
 #' @export
 inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
-    default = value, placeholder = "Enter number", arrows = TRUE, meaning = NULL)
+    default = value, placeholder = "Enter number", meaning = NULL,
+    max_width = "10em", arrows = TRUE)
 {
     # TODO need to do full type checking for each argument, for all functions...
     # TODO check what happens with very small or very large numbers...
@@ -39,7 +40,7 @@ inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
     # Modify numeric input
     # ARIA: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/spinbutton_role
     widget = inline_text(id = id, value = value, placeholder = placeholder,
-        meaning = meaning)
+        meaning = meaning, max_width = max_width)
     tq = htmltools::tagQuery(widget)
     tq$find(".inshiny-text-form")$ # get edit box
         addClass("inshiny-number-form")$

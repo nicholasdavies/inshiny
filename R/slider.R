@@ -21,7 +21,7 @@
 #' )
 #' @export
 inline_slider = function(id, value, min, max, step = NULL, default = value,
-    placeholder = "Enter number", meaning = NULL)
+    placeholder = "Enter number", meaning = NULL, max_width = "10em")
 {
     if (!is_number(min)) stop("min must be a number.")
     if (!is_number(max)) stop("max must be a number.")
@@ -44,7 +44,7 @@ inline_slider = function(id, value, min, max, step = NULL, default = value,
     # Get textbox (number input without up/down arrows)
     textbox = inline_number(id = id, value = value, min = min, max = max,
         step = step, default = default, placeholder = placeholder,
-        meaning = meaning)$children[[2]]
+        meaning = meaning, max_width = max_width)$children[[2]]
 
     # Modify textbox
     tq = htmltools::tagQuery(textbox)

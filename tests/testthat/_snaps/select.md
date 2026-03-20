@@ -6,7 +6,7 @@
     Output
       <span class="dropdown-center">
         <span class="inshiny-text-container" id="inshiny-list-drop-select_id" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-          <span id="select_id" class="inshiny-nofocus inshiny-text-form inshiny-list-form inshiny-with-options" tabindex="0" role="textbox" aria-placeholder="&amp;nbsp;" aria-label="Select a pet name">Rex</span>
+          <span id="select_id" class="inshiny-nofocus inshiny-text-form inshiny-list-form inshiny-with-options" tabindex="0" role="textbox" aria-placeholder="&amp;nbsp;" aria-label="Select a pet name" style="max-width:10em">Rex</span>
           <span class="inshiny-text-placeholder text-info" aria-hidden="true">&nbsp;</span>
           <span class="form-control inshiny-text-box" aria-hidden="true"></span>
           <span class="inshiny-text-rightpadding" aria-hidden="true"></span>

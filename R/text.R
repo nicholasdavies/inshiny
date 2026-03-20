@@ -9,6 +9,10 @@
 #'     the textbox when it is empty, as a prompt.
 #' @param meaning A descriptive label, for people using assistive technology
 #'     such as screen readers.
+#' @param max_width The maximum width of the text input as a CSS length
+#'     (e.g. `"10em"`, `"200px"`). When the text is longer than this, the
+#'     input becomes horizontally scrollable. The default is `"10em"`. Use
+#'     `NULL` for no limit.
 #' @return An inline widget to be included in an [inline()] wrapper.
 #' @seealso [shiny::textInput] for how the text input works with your Shiny server.
 #' @examples
@@ -18,7 +22,8 @@
 #'         placeholder = "Enter your name", meaning = "Your name"), ".")
 #' )
 #' @export
-inline_text = function(id, value = "", placeholder = "Enter text", meaning = NULL)
+inline_text = function(id, value = "", placeholder = "Enter text",
+    meaning = NULL, max_width = "10em")
 {
     # TODO Make this its own validation func
     placeholder = as.character(placeholder);
@@ -55,7 +60,8 @@ inline_text = function(id, value = "", placeholder = "Enter text", meaning = NUL
             "tabindex" = 0, # ensure tabbable
             "role" = "textbox", # accessibility
             "aria-placeholder" = placeholder, # accessibility
-            "aria-label" = meaning # accessibility
+            "aria-label" = meaning, # accessibility
+            "style" = if (!is.null(max_width)) paste0("max-width:", max_width) # width limit
         )
     widget = tq$allTags()
     widget$children[[1]]$children = list(value)

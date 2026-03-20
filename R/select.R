@@ -44,7 +44,8 @@
 #'         ".")
 #' )
 #' @export
-inline_select = function(id, choices, selected = NULL, multiple = FALSE, meaning = NULL)
+inline_select = function(id, choices, selected = NULL, multiple = FALSE,
+    meaning = NULL, max_width = "10em")
 {
     if (multiple) {
         return (inline_selectize(id, choices, selected, multiple, meaning))
@@ -57,7 +58,8 @@ inline_select = function(id, choices, selected = NULL, multiple = FALSE, meaning
     details = select_details(id, choices, selected, multiple);
 
     # Get textbox; this handles restoreInput
-    textbox = inline_text(id, details$selected, placeholder = NULL, meaning = meaning)
+    textbox = inline_text(id, details$selected, placeholder = NULL, meaning = meaning,
+        max_width = max_width)
 
     # Modify textbox
     tq = htmltools::tagQuery(textbox)

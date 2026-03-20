@@ -158,6 +158,10 @@
 .inshiny-text-form {
     position: relative;
     padding: 0 0 0 0.35rem;
+    white-space: nowrap;
+    overflow-x: auto;
+    display: inline-block;
+    vertical-align: bottom;
 }
 
 .inshiny-text-placeholder {

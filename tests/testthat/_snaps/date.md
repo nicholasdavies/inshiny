@@ -8,7 +8,7 @@
     Output
       <span class="dropdown-center">
         <span class="inshiny-text-container" id="inshiny-date-drop-date_id" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-          <span id="date_id" class="inshiny-nofocus inshiny-text-form inshiny-date-form inshiny-with-datepicker" contenteditable tabindex="0" role="textbox" aria-placeholder="Enter date" aria-label="Date to select" data-default="2025-08-28" data-value="2025-08-28">2025-08-28</span>
+          <span id="date_id" class="inshiny-nofocus inshiny-text-form inshiny-date-form inshiny-with-datepicker" contenteditable tabindex="0" role="textbox" aria-placeholder="Enter date" aria-label="Date to select" style="max-width:10em" data-default="2025-08-28" data-value="2025-08-28">2025-08-28</span>
           <span class="inshiny-text-placeholder text-info" aria-hidden="true">Enter date</span>
           <span class="form-control inshiny-text-box" aria-hidden="true"></span>
           <span class="inshiny-text-rightpadding" aria-hidden="true"></span>

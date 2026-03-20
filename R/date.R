@@ -44,7 +44,7 @@
 #' )
 #' @export
 inline_date = function(id, value = NULL, min = NULL, max = NULL,
-    placeholder = "Enter date", meaning = NULL,
+    placeholder = "Enter date", meaning = NULL, max_width = "10em",
     format = "yyyy-mm-dd", startview = "month", weekstart = 0, language = "en",
     autoclose = TRUE, datesdisabled = NULL, daysofweekdisabled = NULL)
 {
@@ -62,7 +62,8 @@ inline_date = function(id, value = NULL, min = NULL, max = NULL,
     drop_id = paste0("inshiny-date-drop-", id);
 
     # Get textbox
-    textbox = inline_text(id, value, placeholder = placeholder, meaning = meaning)
+    textbox = inline_text(id, value, placeholder = placeholder, meaning = meaning,
+        max_width = max_width)
 
     # Modify textbox
     tq = htmltools::tagQuery(textbox)
