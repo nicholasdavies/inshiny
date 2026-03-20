@@ -14,7 +14,12 @@
    z-index: -1 on .inshiny-text-box is scoped within them rather than
    escaping behind their backgrounds. */
 .card:has(.inshiny-text-box),
-.accordion-item:has(.inshiny-text-box) {
+.accordion-item:has(.inshiny-text-box),
+.list-group-item:has(.inshiny-text-box),
+.toast:has(.inshiny-text-box),
+.modal-content:has(.inshiny-text-box),
+.sidebar:has(.inshiny-text-box),
+.inshiny-bg {
     isolation: isolate;
 }
 

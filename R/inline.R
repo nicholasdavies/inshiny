@@ -15,6 +15,24 @@
 #'     [Bootstrap 5 spacing classes](https://getbootstrap.com/docs/5.3/utilities/spacing/),
 #'     or anything else. For multiple classes, provide one space-separated
 #'     string.
+#'
+#' @section Note on rendering:
+#'
+#' Inline widgets from inshiny are typically displayed with borders around them
+#' to show that they are editable. For the borders to display correctly, inshiny
+#' includes some custom CSS to make sure the borders work inside common [bslib]
+#' containers such as [bslib::card()] and [bslib::accordion_panel()]. However,
+#' if you place inline widgets inside a custom container that has its own opaque
+#' background (e.g. a `div` with `background-color` set), the border around
+#' widgets may disappear. To fix this, add the CSS class `"inshiny-bg"` to the
+#' container:
+#'
+#' ```
+#' tags$div(class = "inshiny-bg", style = "background-color: white;",
+#'     inline("Enter a value: ", inline_text("val", "hello"))
+#' )
+#' ```
+#'
 #' @return An HTML element to be included in your Shiny UI definition.
 #' @examples
 #' ui <- bslib::page_fixed(
