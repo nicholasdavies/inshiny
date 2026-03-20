@@ -12,6 +12,7 @@ inline_number(
   step = NULL,
   default = value,
   placeholder = "Enter number",
+  arrows = TRUE,
   meaning = NULL
 )
 }
@@ -33,6 +34,9 @@ respectively. The default step is 1.}
 \item{placeholder}{The character string or HTML element that will appear in
 the textbox when it is empty, as a prompt.}
 
+\item{arrows}{Whether to show clickable arrows that can be used to adjust
+the number up or down.}
+
 \item{meaning}{A descriptive label, for people using assistive technology
 such as screen readers.}
 }
@@ -53,5 +57,6 @@ ui <- bslib::page_fixed(
 )
 }
 \seealso{
-\link[shiny:numericInput]{shiny::numericInput} for how the number input works with your Shiny server.
+\link[shiny:numericInput]{shiny::numericInput} for how the number input works with your Shiny
+server.
 }

@@ -12,8 +12,11 @@
 #'     and the Home and End keys set the number to the minimum or maximum
 #'     respectively. The default step is 1.
 #' @param default A default value to be used if the input is invalid or empty.
+#' @param arrows Whether to show clickable arrows that can be used to adjust
+#'     the number up or down.
 #' @inherit inline_text return
-#' @seealso [shiny::numericInput] for how the number input works with your Shiny server.
+#' @seealso [shiny::numericInput] for how the number input works with your Shiny
+#'     server.
 #' @examples
 #' ui <- bslib::page_fixed(
 #'     shiny::h1("Breakfast app (beta)"),
@@ -24,7 +27,7 @@
 #' )
 #' @export
 inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
-    default = value, placeholder = "Enter number", meaning = NULL)
+    default = value, placeholder = "Enter number", arrows = TRUE, meaning = NULL)
 {
     # TODO need to do full type checking for each argument, for all functions...
     # TODO check what happens with very small or very large numbers...
@@ -53,11 +56,15 @@ inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
         )
     widget = tq$allTags()
 
-    shiny::span(
-        shiny::div(class = "inshiny-arrows",
-            shiny::span(class = "inshiny-inc", `data-target-id` = id),
-            shiny::span(class = "inshiny-dec", `data-target-id` = id)
-        ),
-        widget
-    )
+    if (arrows) {
+        widget = shiny::span(
+            shiny::div(class = "inshiny-arrows",
+                shiny::span(class = "inshiny-inc", `data-target-id` = id),
+                shiny::span(class = "inshiny-dec", `data-target-id` = id)
+            ),
+            widget
+        )
+    }
+
+    widget
 }
