@@ -1,5 +1,8 @@
 # inshiny (development version)
 
+* Made the arrow elements within inline_number() optional and fixed a spacing
+  issue when inline_number() appeared in a flex layout.
+
 * Fixed some slight spacing differences when inline elements appeared in a 
   page_sidebar() versus a page_fixed().
 
