@@ -1,5 +1,8 @@
 # inshiny (development version)
 
+* Fixed a bug in which borders around input elements wouldn't appear within a
+  card or accordion panel.
+
 # inshiny 0.1.2
 
 * Changed to use htmltools::tagQuery for tag editing, and modified check_tags() 

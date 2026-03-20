@@ -130,6 +130,7 @@
 .inshiny-text-container {
     position: relative;
     margin: 0 0.15rem;
+    isolation: isolate;
 }
 
 .inshiny-text-form {
