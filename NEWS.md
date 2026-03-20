@@ -1,5 +1,9 @@
 # inshiny (development version)
 
+* Added max_width parameter for text-based widgets.
+
+* Fixed a problem with the caret not appearing in text-based widgets.
+
 # inshiny 0.1.3
 
 * Updated tests for shiny 1.13.0.
