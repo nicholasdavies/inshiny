@@ -31,8 +31,8 @@ choices = list(`East Coast` = list(NY = "NY", NJ = "NJ", CT = "CT"), `West Coast
     WA = "WA", OR = "OR", CA = "CA"), Midwest = list(MN = "MN",
     WI = "WI", `<IA>` = "\"IA"))
 
-ui = page_fixed(
-    theme = bs_theme(version = 5, preset = "quartz"),
+ui = page_sidebar(
+    theme = bs_theme(version = 5, preset = "lumen"),
 
     h1("Inline widget test"),
 
