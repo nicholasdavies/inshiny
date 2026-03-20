@@ -32,7 +32,7 @@ choices = list(`East Coast` = list(NY = "NY", NJ = "NJ", CT = "CT"), `West Coast
     WI = "WI", `<IA>` = "\"IA"))
 
 ui = page_fixed(
-    theme = bs_theme(version = 5, preset = "lumen"),
+    theme = bs_theme(version = 5, preset = "quartz"),
 
     h1("Inline widget test"),
 

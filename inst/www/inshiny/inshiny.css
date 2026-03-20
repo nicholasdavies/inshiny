@@ -10,6 +10,14 @@
     border-color: var(--bs-danger);
 }
 
+/* Ensure cards and accordion items create stacking contexts so that
+   z-index: -1 on .inshiny-text-box is scoped within them rather than
+   escaping behind their backgrounds. */
+.card:has(.inshiny-text-box),
+.accordion-item:has(.inshiny-text-box) {
+    isolation: isolate;
+}
+
 /* When inside a bslib gap-spacing container (e.g. page_sidebar), counteract
    the flex gap between consecutive inline elements so they remain tightly
    spaced like regular text lines. */
@@ -140,7 +148,6 @@
 .inshiny-text-container {
     position: relative;
     margin: 0 0.15rem;
-    isolation: isolate;
 }
 
 .inshiny-text-form {

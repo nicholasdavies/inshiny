@@ -3,7 +3,7 @@ library(shiny)
 library(bslib)
 
 ui = page_sidebar(
-    theme = bs_theme(version = 5, preset = "lumen"),
+    theme = bs_theme(version = 5, preset = "quartz"),
 
     inline("My name is ", inline_text("myname1", "Nick", "Enter text")),
 
