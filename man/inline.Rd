@@ -33,12 +33,12 @@ inshiny inline widgets.
 
 Inline widgets from inshiny are typically displayed with borders around them
 to show that they are editable. For the borders to display correctly, inshiny
-includes some custom CSS to make sure the borders work inside common \link{bslib}
-containers such as \code{\link[bslib:card]{bslib::card()}} and \code{\link[bslib:accordion]{bslib::accordion_panel()}}. However,
-if you place inline widgets inside a custom container that has its own opaque
-background (e.g. a \code{div} with \code{background-color} set), the border around
-widgets may disappear. To fix this, add the CSS class \code{"inshiny-bg"} to the
-container:
+includes some custom CSS to make sure the borders work inside common
+\link[bslib:bslib-package]{bslib} containers such as \link[bslib:card]{bslib::card} and
+\link[bslib:accordion]{bslib::accordion_panel}. However, if you place inline widgets inside a
+custom container that has its own opaque background (e.g. a \code{div} with
+\code{background-color} set), the border around widgets may disappear. To fix
+this, add the CSS class \code{"inshiny-bg"} to the container:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{tags$div(class = "inshiny-bg", style = "background-color: white;",
     inline("Enter a value: ", inline_text("val", "hello"))
