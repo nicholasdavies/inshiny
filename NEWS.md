@@ -1,4 +1,4 @@
-# inshiny (development version)
+# inshiny 0.1.4
 
 * Added max_width parameter for text-based widgets.
 
