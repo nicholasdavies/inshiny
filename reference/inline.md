@@ -46,9 +46,8 @@ correctly, inshiny includes some custom CSS to make sure the borders
 work inside common
 [bslib](https://rstudio.github.io/bslib/reference/bslib-package.html)
 containers such as
-[`bslib::card()`](https://rstudio.github.io/bslib/reference/card.html)
-and
-[`bslib::accordion_panel()`](https://rstudio.github.io/bslib/reference/accordion.html).
+[bslib::card](https://rstudio.github.io/bslib/reference/card.html) and
+[bslib::accordion_panel](https://rstudio.github.io/bslib/reference/accordion.html).
 However, if you place inline widgets inside a custom container that has
 its own opaque background (e.g. a `div` with `background-color` set),
 the border around widgets may disappear. To fix this, add the CSS class
