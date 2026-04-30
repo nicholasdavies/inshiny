@@ -183,6 +183,96 @@ function set_switch_label($switch) {
     }
 }
 
+// Process a .inshiny-text-form element: set placeholder visibility,
+// validate content, sync slider/datepicker, and report value to Shiny.
+function process_text_form(el) {
+    var $el = $(el);
+    var content = el.textContent || "";
+    var handler = "";
+
+    // Get datepicker, if present
+    var datepicker;
+    var datepicker_id;
+    if ($el.hasClass("inshiny-with-datepicker")) {
+        datepicker_id = "inshiny-datepicker-" + $el.attr("id");
+        datepicker = $("#" + datepicker_id).data().datepicker;
+    }
+
+    if (content === "") {
+        // If content is empty, display placeholder
+        $el.siblings(".inshiny-text-placeholder").css("display", "inline");
+        if ($el.hasClass("inshiny-number-form")) {
+            // If number: remove invalid class (placeholder covers this)
+            // and set content to default, update aria "valuenow".
+            $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
+            content = Number($el.data("default"));
+            $el.attr("aria-valuenow", content);
+        } else if ($el.hasClass("inshiny-date-form")) {
+            // If number: remove invalid class (placeholder covers this)
+            // and set content to default (in datepicker's format),
+            // update "value" to default (in ISO format).
+            $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
+            content = $el.data("default");
+            $el.data("value", $el.data("default"));
+        }
+    } else {
+        // If content is present, remove placeholder
+        $el.siblings(".inshiny-text-placeholder").css("display", "none");
+
+        // Check validity for different inputs
+        if ($el.hasClass("inshiny-number-form")) {
+            // Number: is number, and not outside range
+            var num = Number(content);
+            var min = $el.data("min");
+            var max = $el.data("max");
+            if (!is_number(content) || (min !== undefined && num < min) ||
+                    (max !== undefined && num > max)) {
+                $el.siblings(".inshiny-text-box").addClass("inshiny-invalid");
+                content = Number($el.data("default"));
+            } else {
+                $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
+                content = num; // format as number
+            }
+            $el.attr("aria-valuenow", content);
+        } else if ($el.hasClass("inshiny-date-form")) {
+            // Date: textbox contents can be parsed and then reformatted
+            // and still the same, and date not disallowed or outside range.
+            var proposed_date = parse_date_dp(content, datepicker_id);
+            var formatted = format_date_dp(proposed_date, datepicker_id);
+            if (datepicker.dateIsDisabled(proposed_date) ||
+                    !datepicker.dateWithinRange(proposed_date) ||
+                    content != formatted) {
+                $el.siblings(".inshiny-text-box").addClass("inshiny-invalid");
+                content = $el.data("default");
+                $el.data("value", $el.data("default"));
+            } else {
+                $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
+                content = format_date_iso(proposed_date);
+                $el.data("value", format_date_iso(proposed_date));
+            }
+        }
+    }
+
+    // If this is a number form with associated slider, update the slider
+    if ($el.hasClass("inshiny-with-slider")) {
+        var slider = $("#" + "inshiny-slider-" + $el.attr("id")).data("ionRangeSlider");
+        if (slider.result.from != content) {
+            $el.data("dontChange", true);
+            slider.update({ from: content });
+            $el.data("dontChange", false);
+        }
+    }
+    // Similarly, update any associated datepicker
+    if ($el.hasClass("inshiny-with-datepicker")) {
+        if (format_date_iso(datepicker.getUTCDate()) != content) {
+            datepicker.update(format_date_dp(content, datepicker_id));
+        }
+        handler = ":shiny.date";
+    }
+
+    Shiny.setInputValue(el.id + handler, content, { priority: "event" });
+}
+
 // Resize selectize spacer
 function resize_select($el) {
     var width = 0;
@@ -241,15 +331,9 @@ $(document).on("shiny:connected", function() {
 
     // INLINE TEXT WIDGET
 
-    // Send initial value for .inshiny-text-form and related elements
-    $(".inshiny-text-form").not(".inshiny-number-form").not("inshiny-date-form").each(function() {
-        Shiny.setInputValue($(this).attr("id"),
-            $(this).text(), { priority: "event" });
-    });
-    $(".inshiny-number-form").each(function() {
-        Shiny.setInputValue($(this).attr("id"),
-            Number($(this).text()), { priority: "event" });
-    });
+    // Date forms are processed later, after bind_datepicker has created their
+    // datepicker; bind_datepicker modifies textContent, which triggers the
+    // observer below and calls process_text_form.
     $(".inshiny-date-form").each(function() {
         Shiny.setInputValue($(this).attr("id") + ":shiny.date",
             $(this).data("value"), { priority: "event" });
@@ -293,90 +377,7 @@ $(document).on("shiny:connected", function() {
             var el = mutation.target.nodeType === 3   // text node
                 ? mutation.target.parentElement
                 : mutation.target;
-            var $el = $(el);
-            var content = el.textContent || "";
-            var handler = "";
-
-            // Get datepicker, if present
-            var datepicker;
-            if ($el.hasClass("inshiny-with-datepicker")) {
-                var datepicker_id = "inshiny-datepicker-" + $el.attr("id");
-                datepicker = $("#" + datepicker_id).data().datepicker;
-            }
-
-            if (content === "") {
-                // If content is empty, display placeholder
-                $el.siblings(".inshiny-text-placeholder").css("display", "inline");
-                if ($el.hasClass("inshiny-number-form")) {
-                    // If number: remove invalid class (placeholder covers this)
-                    // and set content to default, update aria "valuenow".
-                    $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
-                    content = Number($el.data("default"));
-                    $el.attr("aria-valuenow", content);
-                } else if ($el.hasClass("inshiny-date-form")) {
-                    // If number: remove invalid class (placeholder covers this)
-                    // and set content to default (in datepicker's format),
-                    // update "value" to default (in ISO format).
-                    $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
-                    content = $el.data("default");
-                    $el.data("value", $el.data("default"));
-                }
-            } else {
-                // If content is present, remove placeholder
-                $el.siblings(".inshiny-text-placeholder").css("display", "none");
-
-                // Check validity for different inputs
-                if ($el.hasClass("inshiny-number-form")) {
-                    // Number: is number, and not outside range
-                    var num = Number(content);
-                    var min = $el.data("min");
-                    var max = $el.data("max");
-                    if (!is_number(content) || (min !== undefined && num < min) ||
-                            (max !== undefined && num > max)) {
-                        $el.siblings(".inshiny-text-box").addClass("inshiny-invalid");
-                        content = Number($el.data("default"));
-                    } else {
-                        $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
-                        content = num; // format as number
-                    }
-                    $el.attr("aria-valuenow", content);
-                } else if ($el.hasClass("inshiny-date-form")) {
-                    // Date: textbox contents can be parsed and then reformatted
-                    // and still the same, and date not disallowed or outside range.
-                    var proposed_date = parse_date_dp(content, datepicker_id);
-                    var formatted = format_date_dp(proposed_date, datepicker_id);
-                    if (datepicker.dateIsDisabled(proposed_date) ||
-                            !datepicker.dateWithinRange(proposed_date) ||
-                            content != formatted) {
-                        $el.siblings(".inshiny-text-box").addClass("inshiny-invalid");
-                        content = $el.data("default");
-                        $el.data("value", $el.data("default"));
-                    } else {
-                        $el.siblings(".inshiny-text-box").removeClass("inshiny-invalid");
-                        content = format_date_iso(proposed_date);
-                        $el.data("value", format_date_iso(proposed_date));
-                    }
-                }
-            }
-
-            // If this is a number form with associated slider, update the slider
-            if ($el.hasClass("inshiny-with-slider")) {
-                var slider = $("#" + "inshiny-slider-" + $el.attr("id")).data("ionRangeSlider");
-                if (slider.result.from != content) {
-                    $el.data("dontChange", true);
-                    slider.update({ from: content });
-                    $el.data("dontChange", false);
-                }
-            }
-            // Similarly, update any associated datepicker
-            if ($el.hasClass("inshiny-with-datepicker")) {
-                if (format_date_iso(datepicker.getUTCDate()) != content) {
-                    datepicker.update(format_date_dp(content, datepicker_id));
-                }
-                handler = ":shiny.date";
-            }
-
-            Shiny.setInputValue(el.id + handler, content, { priority: "event" });
+            process_text_form(el);
         });
     });
 
@@ -452,6 +453,18 @@ $(document).on("shiny:connected", function() {
     // Bind number forms to their sliders
     $(".inshiny-with-slider").each(function() {
         bind_slider(this.id);
+    });
+
+
+    // INITIAL STATE
+
+    // Apply initial visual state (placeholder visibility, invalid class) and
+    // send initial Shiny input value for non-date text/number forms. Run after
+    // bind_slider so slider-bound numbers can sync to their sliders. Date
+    // forms are handled by the observer firing in response to bind_datepicker
+    // modifying textContent below.
+    $(".inshiny-text-form").not(".inshiny-date-form").each(function() {
+        process_text_form(this);
     });
 
 
