@@ -15,6 +15,7 @@ enables updating to Bootstrap 5) in addition to `shiny` for `inshiny` to
 work.
 
 ``` r
+
 library(shiny)
 library(bslib)
 library(inshiny)
@@ -63,6 +64,7 @@ within this element. Here is a simple demo of a Shiny UI that uses most
 of the widgets provided by `inshiny`:
 
 ``` r
+
 ui <- page_fixed(
     theme = bs_theme(version = 5, preset = "quartz"),
 
@@ -98,6 +100,7 @@ It looks something like this:
 Compare this to a similar layout with basic Shiny inputs:
 
 ``` r
+
 ui <- page_fixed(
     theme = bs_theme(version = 5, preset = "quartz"),
 
@@ -128,6 +131,7 @@ widgets.
 We complete the app using server code to handle the inputs:
 
 ``` r
+
 server <- function(input, output, session)
 {
     output$plot <- renderPlot({

@@ -16,6 +16,7 @@ You can install the released version of inshiny from
 [CRAN](https://CRAN.R-project.org/package=inshiny) with:
 
 ``` r
+
 install.packages("inshiny")
 ```
 
@@ -23,6 +24,7 @@ You can install the development version of inshiny from
 [GitHub](https://github.com/nicholasdavies/inshiny) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("nicholasdavies/inshiny")
 ```
@@ -32,6 +34,7 @@ devtools::install_github("nicholasdavies/inshiny")
 This demonstrates the basic features of `inshiny`:
 
 ``` r
+
 library(inshiny)
 library(shiny)
 library(bslib)
