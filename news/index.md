@@ -1,5 +1,7 @@
 # Changelog
 
+## inshiny (development version)
+
 ## inshiny 0.1.4
 
 CRAN release: 2026-03-31
