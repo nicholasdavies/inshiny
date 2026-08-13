@@ -1,5 +1,10 @@
 # inshiny (development version)
 
+* Fixed a bug in which an HTML element passed as the `placeholder` of a
+  text-based widget was displayed as escaped markup instead of being rendered.
+  The `aria-placeholder` attribute now carries the plain text of such a
+  placeholder, rather than its markup.
+
 # inshiny 0.1.4
 
 * Added max_width parameter for text-based widgets.

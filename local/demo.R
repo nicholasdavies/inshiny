@@ -36,7 +36,7 @@ ui = page_fixed(
 
     h1("Inline widget test"),
 
-    inline("My name is ", inline_text("myname", "Nick", "Enter text"), ", I am ",
+    inline("My name is ", inline_text("myname", "Nick", shiny::HTML("<em>Enter</em> text")), ", I am ",
         inline_number("myage", 38, 30, 50), " years old."),
 
     inline(uiOutput("greeting")),

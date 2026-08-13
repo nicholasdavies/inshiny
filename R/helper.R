@@ -32,6 +32,34 @@ is_number_or_null = function(x)
     is_number(x) || is.null(x)
 }
 
+# Plain text content of a string, HTML string or tag, for ARIA attributes.
+plain_text = function(x)
+{
+    if (is.null(x)) {
+        return ("")
+    }
+
+    if (inherits(x, "shiny.tag")) {
+        return (plain_text(x$children))
+    }
+
+    # Raw HTML has no children to walk, so strip tags and decode the entities
+    # htmltools escapes. &amp; is decoded last so that e.g. "&amp;lt;" is
+    # left as "&lt;" rather than becoming "<".
+    if (inherits(x, "html")) {
+        x = stringr::str_remove_all(x, "<[^>]*>")
+        x = stringr::str_replace_all(x, c("&lt;" = "<", "&gt;" = ">",
+            "&quot;" = "\"", "&#39;" = "'", "&nbsp;" = " ", "&amp;" = "&"))
+        return (as.character(x))
+    }
+
+    if (is.list(x)) {
+        return (paste0(vapply(x, plain_text, character(1)), collapse = ""))
+    }
+
+    return (paste0(as.character(x), collapse = ""))
+}
+
 # Remove all whitespace from some html.
 noWS = function(html)
 {

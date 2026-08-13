@@ -26,9 +26,12 @@ inline_text = function(id, value = "", placeholder = "Enter text",
     meaning = NULL, max_width = "10em")
 {
     # TODO Make this its own validation func
-    placeholder = as.character(placeholder);
-    if (length(placeholder) != 1 || is.na(placeholder) || stringr::str_trim(placeholder) == "") {
+    placeholder_chr = as.character(placeholder);
+    if (length(placeholder_chr) != 1 || is.na(placeholder_chr) || stringr::str_trim(placeholder_chr) == "") {
         placeholder = shiny::HTML("&nbsp;");
+        aria_placeholder = placeholder
+    } else {
+        aria_placeholder = plain_text(placeholder)
     }
 
     # Make base text input
@@ -59,7 +62,7 @@ inline_text = function(id, value = "", placeholder = "Enter text",
             "contenteditable" = NA, # add contenteditable
             "tabindex" = 0, # ensure tabbable
             "role" = "textbox", # accessibility
-            "aria-placeholder" = placeholder, # accessibility
+            "aria-placeholder" = aria_placeholder, # accessibility
             "aria-label" = meaning, # accessibility
             "style" = if (!is.null(max_width)) paste0("max-width:", max_width) # width limit
         )
