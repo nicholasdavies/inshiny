@@ -10,6 +10,7 @@ test_app = function(name = "dynamic")
 {
     skip_on_cran()
     skip_if_not_installed("shinytest2")
+    skip_if_not_installed("chromote")
     skip_if(is.null(chromote::find_chrome()),
         "No Chrome-based browser available.")
 
