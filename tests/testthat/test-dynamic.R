@@ -234,6 +234,54 @@ test_that("update_inline ignores a widget that is not rendered", {
     expect_equal(app$get_value(input = "d_text"), "Updated")
 })
 
+test_that("widgets keep working when moved between uiOutputs", {
+    app = test_app("move")
+    on.exit(app$stop())
+
+    app$set_inputs(where = TRUE)
+    app$wait_for_idle()
+
+    # The widgets that arrived in the second panel are bound to their controls,
+    # rather than to the copies that were on their way out of the first
+    expect_true(app$get_js("!!$('#inshiny-slider-sl').data('ionRangeSlider')"))
+    expect_true(app$get_js(
+        "!!($('#inshiny-datepicker-dt').data() && $('#inshiny-datepicker-dt').data().datepicker)"))
+
+    # Moving the slider drives the number it belongs to
+    app$run_js("(function() {
+        $('#inshiny-slider-sl').data('ionRangeSlider').update({ from: 23 });
+    })()")
+    app$wait_for_idle()
+    expect_equal(app$get_value(input = "sl"), 23)
+
+    # Choosing a date drives the date widget it belongs to
+    app$run_js("(function() {
+        $('#inshiny-datepicker-dt').data().datepicker
+            .setUTCDate(new Date(Date.UTC(2025, 7, 11)));
+    })()")
+    app$wait_for_idle()
+    expect_equal(app$get_value(input = "dt"), as.Date("2025-08-11"))
+})
+
+test_that("update_inline reaches widgets moved between uiOutputs", {
+    app = test_app("move")
+    on.exit(app$stop())
+
+    app$set_inputs(where = TRUE)
+    app$wait_for_idle()
+    catch_errors(app)
+
+    app$click("go")
+    app$wait_for_idle()
+
+    expect_equal(app$get_js("window.__errors"), list())
+    expect_equal(app$get_value(input = "sl"), 30)
+    expect_equal(app$get_value(input = "dt"), as.Date("2025-08-20"))
+    expect_equal(app$get_value(input = "se"), "epsilon")
+    expect_equal(app$get_value(input = "nu"), 8)
+    expect_true(app$get_value(input = "sw"))
+})
+
 test_that("dynamic widgets can be removed and re-inserted", {
     app = test_app()
     on.exit(app$stop())

@@ -63,7 +63,8 @@ inline_switch = function(id, value, on = "On", off = "Off",
 
     tq$find(".bslib-input-switch > label")$remove() # remove <label> tag
 
-    tq$append(shiny::span(id = label_id, if (value) on else off)) # insert status label
+    tq$append(shiny::span(id = label_id, class = "inshiny-switch-label",
+        if (value) on else off)) # insert status label
 
     # Return modified tag
     tq$allTags()

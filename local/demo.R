@@ -7,7 +7,6 @@ library(bslib)
 # X hitting return on any widget messes up the display.
 # TODO selectize input text colour is different.
 # TODO selectize input, when typing in a potential value, text box remains small.
-# TODO make sure can add/remove widgets using e.g. uiOutput.
 
 # todo on inline_number
 # x respect min/max/step

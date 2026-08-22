@@ -8,7 +8,7 @@
         <span class="bslib-input-switch form-switch form-check inshiny-switch-container">
           <input id="switch_id" class="form-check-input inshiny-switch" type="checkbox" role="switch" aria-label="On/off switch" aria-checked="false" data-label-id="inshiny-switch-label-switch_id" data-on-label="&lt;span class=&quot;text-success&quot;&gt;On&lt;/span&gt;" data-off-label="&lt;span class=&quot;text-danger&quot;&gt;Off&lt;/span&gt;"/>
         </span>
-        <span id="inshiny-switch-label-switch_id">
+        <span id="inshiny-switch-label-switch_id" class="inshiny-switch-label">
           <span class="text-danger">Off</span>
         </span>
       </span>

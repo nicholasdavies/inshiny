@@ -60,9 +60,8 @@ function format_date_iso(date) {
 }
 
 // Format date according to datepicker format; date can be a Date or a string
-function format_date_dp(date, dp_id)
+function format_date_dp(date, $dp)
 {
-    var $dp = $("#" + dp_id);
     if (typeof(date) === "string") {
         date = new Date(date);
     } else if (!(date instanceof Date)) {
@@ -74,19 +73,51 @@ function format_date_dp(date, dp_id)
 }
 
 // Parse date_str according to datepicker format
-function parse_date_dp(date_str, dp_id)
+function parse_date_dp(date_str, $dp)
 {
-    var $dp = $("#" + dp_id);
     return $dp.bsDatepicker.DPGlobal.parseDate(date_str,
         $dp.data("dateFormat"),
         $dp.data("dateLanguage"),
         $dp.data("assumeNearbyYear"));
 }
 
+// The other parts of a widget, found by looking within the widget itself.
+// While a widget is being moved from one place in the document to another,
+// the copy on its way out still holds the same ids, so a lookup by id can
+// find that one instead.
+function slider_of(el) {
+    return $(el).closest(".dropdown-center").find("input.js-range-slider");
+}
+
+function datepicker_of(el) {
+    return $(el).closest(".dropdown-center").find(".inshiny-datepicker");
+}
+
+function menu_of(el) {
+    return $(el).closest(".dropdown-center").find(".inshiny-menu");
+}
+
+function list_form_of(el) {
+    return $(el).closest(".dropdown-center").find(".inshiny-list-form");
+}
+
+function dropdown_of(el) {
+    return $(el).closest(".dropdown-center").find("[data-bs-toggle='dropdown']");
+}
+
+function number_of(el) {
+    return $(el).closest(".inshiny-arrows").siblings(".inshiny-text-container")
+        .find(".inshiny-number-form");
+}
+
+function switch_label_of(el) {
+    return $(el).closest(".inshiny-switch-container").siblings(".inshiny-switch-label");
+}
+
 // Adjust number for numeric input by [by] steps (-1, +1, etc.)
 // by = -99 or +99 interpreted as move to minimum or maximum.
-function adjust_number(target_id, by) {
-    var $target = $("#" + target_id);
+function adjust_number(el, by) {
+    var $target = $(el);
     var num;
     if (is_number($target.text())) {
         num = Number($target.text());
@@ -133,9 +164,9 @@ function adjust_number(target_id, by) {
 }
 
 // Bind a number input to its slider
-function bind_slider(id) {
-    var slider = $("#" + "inshiny-slider-" + id).data("ionRangeSlider");
-    var $number = $("#" + id);
+function bind_slider(el) {
+    var slider = slider_of(el).data("ionRangeSlider");
+    var $number = $(el);
 
     function update_textbox(data) {
         if (!$number.data("dontChange")) {
@@ -151,18 +182,17 @@ function bind_slider(id) {
 }
 
 // Bind a date input to its datepicker
-function bind_datepicker(id) {
-    var datepicker_id = "inshiny-datepicker-" + id;
-    var $datepicker = $("#" + datepicker_id);
+function bind_datepicker(el) {
+    var $datepicker = datepicker_of(el);
     var datepicker = $datepicker.bsDatepicker();
-    var $date = $("#" + id);
+    var $date = $(el);
 
     // Fix bug in Shiny <1.11.1 with datesdisabled
-    var dd = $("#" + datepicker_id).attr("data-date-dates-disabled");
+    var dd = $datepicker.attr("data-date-dates-disabled");
     if (dd !== null) {
         const regex = /\d{4}-\d{2}-\d{2}/g;
-        dd = (dd.match(regex) || []).map((ymd) => format_date_dp(ymd, datepicker_id));
-        $("#" + datepicker_id).data().datepicker.setDatesDisabled(dd);
+        dd = (dd.match(regex) || []).map((ymd) => format_date_dp(ymd, $datepicker));
+        $datepicker.data().datepicker.setDatesDisabled(dd);
     }
 
     // Set initial date to today if needed
@@ -171,7 +201,7 @@ function bind_datepicker(id) {
     }
 
     // Set initial date to match datepicker format
-    $date[0].textContent = format_date_dp($date.data("value"), datepicker_id);
+    $date[0].textContent = format_date_dp($date.data("value"), $datepicker);
 
     // Set datepicker's initial date
     $datepicker.data().datepicker.update($date[0].textContent);
@@ -179,7 +209,7 @@ function bind_datepicker(id) {
     // Attach event handler so that date input changes with datepicker selection
     datepicker.on("changeDate", function(e) {
         if ($datepicker.data("autoclose")) {
-            const $dropdown = $("#inshiny-date-drop-" + id);
+            const $dropdown = dropdown_of(el);
             const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
                 new bootstrap.Dropdown($dropdown);
             dropdown.hide();
@@ -192,10 +222,10 @@ function bind_datepicker(id) {
 // Set switch label
 function set_switch_label($switch) {
     if ($switch.is(":checked")) {
-        $("#" + $switch.data("label-id")).html($switch.data("on-label"));
+        switch_label_of($switch).html($switch.data("on-label"));
         $switch.attr("aria-checked", "true")
     } else {
-        $("#" + $switch.data("label-id")).html($switch.data("off-label"));
+        switch_label_of($switch).html($switch.data("off-label"));
         $switch.attr("aria-checked", "false")
     }
 }
@@ -203,13 +233,12 @@ function set_switch_label($switch) {
 // Select an item in a list widget and close its dropdown
 function list_select($option) {
     var item = $option.data("item");
-    var list = $option.data("list");
-    $("#" + list)[0].textContent = item;
+    list_form_of($option)[0].textContent = item;
 
     $option.parent().parent().children().children().removeClass("active");
     $option.addClass("active");
 
-    var $dropdown = $("#inshiny-list-drop-" + list);
+    var $dropdown = dropdown_of($option);
     const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
         new bootstrap.Dropdown($dropdown);
     dropdown.hide();
@@ -223,10 +252,10 @@ function process_text_form(el) {
 
     // Get datepicker, if present
     var datepicker;
-    var datepicker_id;
+    var $datepicker;
     if ($el.hasClass("inshiny-with-datepicker")) {
-        datepicker_id = "inshiny-datepicker-" + $el.attr("id");
-        datepicker = $("#" + datepicker_id).data().datepicker;
+        $datepicker = datepicker_of(el);
+        datepicker = $datepicker.data().datepicker;
     }
 
     if (content === "") {
@@ -268,8 +297,8 @@ function process_text_form(el) {
         } else if ($el.hasClass("inshiny-date-form")) {
             // Date: textbox contents can be parsed and then reformatted
             // and still the same, and date not disallowed or outside range.
-            var proposed_date = parse_date_dp(content, datepicker_id);
-            var formatted = format_date_dp(proposed_date, datepicker_id);
+            var proposed_date = parse_date_dp(content, $datepicker);
+            var formatted = format_date_dp(proposed_date, $datepicker);
             if (datepicker.dateIsDisabled(proposed_date) ||
                     !datepicker.dateWithinRange(proposed_date) ||
                     content != formatted) {
@@ -286,7 +315,7 @@ function process_text_form(el) {
 
     // If this is a number form with associated slider, update the slider
     if ($el.hasClass("inshiny-with-slider")) {
-        var slider = $("#" + "inshiny-slider-" + $el.attr("id")).data("ionRangeSlider");
+        var slider = slider_of(el).data("ionRangeSlider");
         if (slider.result.from != content) {
             $el.data("dontChange", true);
             slider.update({ from: content });
@@ -296,7 +325,7 @@ function process_text_form(el) {
     // Similarly, update any associated datepicker
     if ($el.hasClass("inshiny-with-datepicker")) {
         if (format_date_iso(datepicker.getUTCDate()) != content) {
-            datepicker.update(format_date_dp(content, datepicker_id));
+            datepicker.update(format_date_dp(content, $datepicker));
         }
     }
 
@@ -463,28 +492,28 @@ $(document).on("click", ".inshiny-text-rightpadding", function() {
 
 // Click-up event
 $(document).on("mousedown", ".inshiny-inc", function() {
-    adjust_number($(this).data("target-id"), +1);
+    adjust_number(number_of(this), +1);
 });
 
 // Click-down event
 $(document).on("mousedown", ".inshiny-dec", function() {
-    adjust_number($(this).data("target-id"), -1);
+    adjust_number(number_of(this), -1);
 });
 
 // Arrow keys up/down
 $(document).on("keydown", ".inshiny-number-form", function(e) {
     if (e.which == 38) {
-        adjust_number(this.id, +1); // Up arrow
+        adjust_number(this, +1); // Up arrow
     } else if (e.which == 40) {
-        adjust_number(this.id, -1); // Down arrow
+        adjust_number(this, -1); // Down arrow
     } else if (e.which == 33) {
-        adjust_number(this.id, +10); // Page up
+        adjust_number(this, +10); // Page up
     } else if (e.which == 34) {
-        adjust_number(this.id, -10); // Page down
+        adjust_number(this, -10); // Page down
     } else if (e.which == 35) {
-        adjust_number(this.id, +99); // End
+        adjust_number(this, +99); // End
     } else if (e.which == 36) {
-        adjust_number(this.id, -99); // Home
+        adjust_number(this, -99); // Home
     } else {
         return;
     }
@@ -517,7 +546,7 @@ $(document).on("keydown", ".inshiny-menu .inshiny-item", function(e) {
 // interferes with data-bs-toggle on mouse events.
 $(document).on("focus", ".inshiny-list-form", function() {
     if (this.matches(":focus-visible")) {
-        var $dropdown = $("#inshiny-list-drop-" + this.id);
+        var $dropdown = dropdown_of(this);
         const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
             new bootstrap.Dropdown($dropdown);
         dropdown.show();
@@ -543,12 +572,12 @@ $.extend(text_binding, {
 
         // Bind number forms to their sliders
         if ($el.hasClass("inshiny-with-slider")) {
-            bind_slider(el.id);
+            bind_slider(el);
         }
 
         // Bind date forms to their datepickers
         if ($el.hasClass("inshiny-with-datepicker")) {
-            bind_datepicker(el.id);
+            bind_datepicker(el);
         }
     },
 
@@ -590,8 +619,8 @@ $.extend(text_binding, {
 
         if ($target.hasClass("inshiny-date-form")) {
             // date: value (NULL), min (NULL), max (NULL), datesdisabled (NULL), daysofweekdisabled (NULL)
-            var datepicker_id = "inshiny-datepicker-" + el.id;
-            var datepicker = $("#" + datepicker_id).data().datepicker;
+            var $datepicker = datepicker_of(el);
+            var datepicker = $datepicker.data().datepicker;
             var curr_date = datepicker.getUTCDate();
             if (data.min !== undefined) {
                 if (data.min === null) datepicker.setStartDate(null);
@@ -619,14 +648,14 @@ $.extend(text_binding, {
             }
             datepicker.setUTCDate(curr_date); // need to reset this after above changes
             if (data.value === null) {
-                $target.text(format_date_dp(Date(), datepicker_id)); // current date
+                $target.text(format_date_dp(Date(), $datepicker)); // current date
             } else if (data.value !== undefined) {
-                $target.text(format_date_dp(data.value, datepicker_id)); // accepts Date or string
+                $target.text(format_date_dp(data.value, $datepicker)); // accepts Date or string
             }
         } else if ($target.hasClass("inshiny-list-form")) {
             // select: choices
             if (data.choices != null) {
-                $("#inshiny-list-menu-" + el.id)[0].innerHTML = data.choices;
+                menu_of(el)[0].innerHTML = data.choices;
             }
         } else if ($target.hasClass("inshiny-with-slider")) {
             // slider: min, max, step (NULL), default
@@ -653,7 +682,7 @@ $.extend(text_binding, {
                 "aria-valuemax": max
             })
             // slider
-            $("#inshiny-slider-" + el.id).data("ionRangeSlider").update({
+            slider_of(el).data("ionRangeSlider").update({
                 min: min,
                 max: max,
                 step: step

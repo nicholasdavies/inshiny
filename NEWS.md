@@ -1,5 +1,7 @@
 # inshiny (development version)
 
+* inshiny widgets can now be used with Shiny's `uiOutput()` and `renderUI()`.
+
 * `update_inline()` now works with widgets inside a Shiny module.
 
 * `update_inline()` no longer reports an error when no widget with the given
