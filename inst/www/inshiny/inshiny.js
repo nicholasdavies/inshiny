@@ -31,6 +31,23 @@ function rm_data($target, key) {
     $target.removeAttr("data-" + key);
 }
 
+// Plain text content of a string of html, for ARIA attributes
+function plain_text(html) {
+    var el = document.createElement("div");
+    el.innerHTML = html;
+    return el.textContent;
+}
+
+// if x is null or undefined, return d, else x
+function deflt(x, d) {
+    return x == null ? d : x;
+}
+
+// if x is undefined, return d, else x
+function defln(x, d) {
+    return x === undefined ? d : x;
+}
+
 // Does str represent a valid finite number, also not an empty string?
 function is_number(str) {
     return str.trim() !== "" && isFinite(str);
@@ -566,6 +583,108 @@ $.extend(text_binding, {
             observer.disconnect();
             $(el).removeData("inshinyObserver");
         }
+    },
+
+    receiveMessage: function(el, data) {
+        var $target = $(el);
+
+        if ($target.hasClass("inshiny-date-form")) {
+            // date: value (NULL), min (NULL), max (NULL), datesdisabled (NULL), daysofweekdisabled (NULL)
+            var datepicker_id = "inshiny-datepicker-" + el.id;
+            var datepicker = $("#" + datepicker_id).data().datepicker;
+            var curr_date = datepicker.getUTCDate();
+            if (data.min !== undefined) {
+                if (data.min === null) datepicker.setStartDate(null);
+                else datepicker.setStartDate(new Date(data.min));
+            }
+            if (data.max !== undefined) {
+                if (data.max === null) datepicker.setEndDate(null);
+                else datepicker.setEndDate(new Date(data.max));
+            }
+            if (data.datesdisabled !== undefined) {
+                if (data.datesdisabled === null) {
+                    datepicker.setDatesDisabled(null);
+                } else {
+                    var ddis;
+                    if (!Array.isArray(data.datesdisabled)) {
+                        ddis = [new Date(data.datesdisabled)];
+                    } else {
+                        ddis = data.datesdisabled.map(x => new Date(x))
+                    }
+                    datepicker.setDatesDisabled(ddis);
+                }
+            }
+            if (data.daysofweekdisabled !== undefined) {
+                datepicker.setDaysOfWeekDisabled(data.daysofweekdisabled);
+            }
+            datepicker.setUTCDate(curr_date); // need to reset this after above changes
+            if (data.value === null) {
+                $target.text(format_date_dp(Date(), datepicker_id)); // current date
+            } else if (data.value !== undefined) {
+                $target.text(format_date_dp(data.value, datepicker_id)); // accepts Date or string
+            }
+        } else if ($target.hasClass("inshiny-list-form")) {
+            // select: choices
+            if (data.choices != null) {
+                $("#inshiny-list-menu-" + el.id)[0].innerHTML = data.choices;
+            }
+        } else if ($target.hasClass("inshiny-with-slider")) {
+            // slider: min, max, step (NULL), default
+            var min = Number(deflt(data.min, $target.data("min")));
+            var max = Number(deflt(data.max, $target.data("max")));
+            var step = defln(data.step, $target.data("step"));
+            if (step === null) { // auto choose step if null -- same method as in slider.R.
+                let range = max - min;
+                if (range < 2 || max != Math.floor(max) || min != Math.floor(min)) {
+                    step = Math.pow(10, Math.round(Math.log10(range / 100)));
+                } else {
+                    step = 1;
+                }
+            }
+            // numeric input
+            $target.data({
+                "min":     min,
+                "max":     max,
+                "step":    step,
+                "default": deflt(data.default, $target.data("default"))
+            });
+            $target.attr({
+                "aria-valuemin": min,
+                "aria-valuemax": max
+            })
+            // slider
+            $("#inshiny-slider-" + el.id).data("ionRangeSlider").update({
+                min: min,
+                max: max,
+                step: step
+            })
+        } else if ($target.hasClass("inshiny-number-form")) {
+            // numeric: min (NULL), max (NULL), step (NULL), default
+            $target.data({
+                "min":     deflt(data.min,     $target.data("min")),
+                "max":     deflt(data.max,     $target.data("max")),
+                "step":    deflt(data.step,    $target.data("step")),
+                "default": deflt(data.default, $target.data("default"))
+            });
+            if (data.min === null)  rm_data($target, "min");
+            if (data.max === null)  rm_data($target, "max");
+            if (data.step === null) rm_data($target, "step");
+            $target.attr({
+                "aria-valuemin": defln(data.min, $target.attr("aria-valuemin")),
+                "aria-valuemax": defln(data.max, $target.attr("aria-valuemax"))
+            })
+        }
+        // all text except date: value, placeholder
+        if (data.value != null && !$target.hasClass("inshiny-date-form")) {
+            $target.text(data.value);
+        }
+        if (data.placeholder != null) {
+            $target.attr("aria-placeholder", plain_text(data.placeholder));
+            $target.siblings(".inshiny-text-placeholder")[0].innerHTML = data.placeholder;
+        }
+        if (data.meaning !== undefined) {
+            $target.attr("aria-label", data.meaning);
+        }
     }
 });
 
@@ -573,6 +692,110 @@ $.extend(text_binding, {
 // initializes after them: bind_slider and bind_datepicker need the slider and
 // datepicker that those bindings create.
 Shiny.inputBindings.register(text_binding, "inshiny.text", -1);
+
+// The remaining widgets are built on Shiny's own inputs, so their bindings are
+// based on Shiny's. Only the elements the binding applies to and the handling
+// of update messages differ; everything else is inherited.
+function extend_binding(name, selector, receive) {
+    var base = Shiny.inputBindings.bindingNames[name].binding;
+    var binding = Object.create(base);
+
+    binding.find = function(scope) {
+        return $(scope).find(selector);
+    };
+
+    binding.receiveMessage = function(el, data) {
+        return receive.call(this, base, el, data);
+    };
+
+    return binding;
+}
+
+// Switch widgets, which Shiny sees as checkboxes
+var switch_binding = extend_binding("shiny.checkboxInput", ".inshiny-switch",
+    function(base, el, data) {
+        // switch: value, on, off
+        var $target = $(el);
+        $target.data({
+            "on-label":  deflt(data.on,  $target.data("on-label")),
+            "off-label": deflt(data.off, $target.data("off-label"))
+        });
+        if (data.value != null) {
+            $target[0].checked = data.value;
+            $target[0].dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        set_switch_label($target);
+        if (data.meaning !== undefined) {
+            $target.attr("aria-label", data.meaning);
+        }
+    });
+
+// Link and button widgets, which Shiny sees as action buttons
+var action_binding = extend_binding("shiny.actionButtonInput",
+    ".inshiny-link, .inshiny-btn",
+    function(base, el, data) {
+        // link, button: label, icon, accent
+        // get existing icon & label, replace with any new ones
+        var $target = $(el);
+        var $icon = $target.children("i:first[role=presentation]");
+        var $label = $target.contents().not($icon);
+        var icon = $icon.length ? $icon.prop("outerHTML") : "";
+        var label = $label.length ? $label.clone().wrapAll("<div>").parent().html() : "";
+        if (data.icon !== undefined)  icon = data.icon || "";
+        if (data.label !== undefined) label = data.label || "";
+        var new_content = icon + " " + label.trim();
+        $target[0].innerHTML = new_content;
+
+        // element-specific actions
+        if ($target.hasClass("inshiny-link")) {
+            // link - replace accent
+            if (data.accent !== undefined) {
+                $target.removeClass(function(i, n) { return (n.match(/(^|\s)link-\S+/g) || []).join(' '); });
+                if (data.accent !== null) {
+                    $target.addClass("link-" + data.accent);
+                }
+            }
+        } else {
+            // button - modify spacer and replace accent
+            $target.siblings(".inshiny-btn-spacer")[0].innerHTML = new_content;
+            if (data.accent !== undefined) {
+                $target.removeClass(function(i, n) { return (n.match(/(^|\s)btn-\S+/g) || []).join(' '); });
+                $target.addClass("btn-" + deflt(data.accent, "default"));
+            }
+        }
+        if (data.meaning !== undefined) {
+            $target.attr("aria-label", data.meaning);
+        }
+    });
+
+// Multiple select widgets, which are Shiny select inputs
+var select_binding = extend_binding("shiny.selectInput",
+    ".inshiny-sel .shiny-input-select",
+    function(base, el, data) {
+        // selectize: options, selected
+        var $target = $(el);
+        var select_data = {};
+        if (data.options !== undefined) {
+            select_data.options = data.options;
+        }
+        if (data.selected !== undefined) {
+            select_data.value = data.selected === null ? [] : data.selected;
+        }
+        if (data.meaning !== undefined) {
+            $target.attr("aria-label", data.meaning);
+        }
+
+        // Shiny's binding replaces the selectize control, so the new one is
+        // bound once it has done so
+        return Promise.resolve(base.receiveMessage.call(this, el, select_data))
+            .then(function() {
+                bind_select(el);
+            });
+    });
+
+Shiny.inputBindings.register(switch_binding, "inshiny.switch", 1);
+Shiny.inputBindings.register(action_binding, "inshiny.action", 1);
+Shiny.inputBindings.register(select_binding, "inshiny.select", 1);
 
 
 // INLINE SELECTIZE WIDGET
@@ -589,185 +812,4 @@ $(document).on("shiny:unbound", ".inshiny-sel .shiny-input-select", function(e) 
     if (e.bindingType !== "input") return;
 
     unbind_select(this);
-});
-
-
-// WIDGET UPDATING
-
-Shiny.addCustomMessageHandler("inshiny-update", function(message) {
-    // if x is null or undefined, return d, else x
-    deflt = function(x, d) {
-        return x == null ? d : x;
-    }
-    // if x is undefined, return d, else x
-    defln = function(x, d) {
-        return x === undefined ? d : x;
-    }
-    var $target = $("#" + message.id)
-
-    if ($target.hasClass("inshiny-link") || $target.hasClass("inshiny-btn")) {
-        // link, button: label, icon, accent
-        // get existing icon & label, replace with any new ones
-        var $icon = $target.children("i:first[role=presentation]");
-        var $label = $target.contents().not($icon);
-        var icon = $icon.length ? $icon.prop("outerHTML") : "";
-        var label = $label.length ? $label.clone().wrapAll("<div>").parent().html() : "";
-        if (message.icon !== undefined)  icon = message.icon || "";
-        if (message.label !== undefined) label = message.label || "";
-        var new_content = icon + " " + label.trim();
-        $target[0].innerHTML = new_content;
-
-        // element-specific actions
-        if ($target.hasClass("inshiny-link")) {
-            // link - replace accent
-            if (message.accent !== undefined) {
-                $target.removeClass(function(i, n) { return (n.match(/(^|\s)link-\S+/g) || []).join(' '); });
-                if (message.accent !== null) {
-                    $target.addClass("link-" + message.accent);
-                }
-            }
-        } else {
-            // button - modify spacer and replace accent
-            $target.siblings(".inshiny-btn-spacer")[0].innerHTML = new_content;
-            if (message.accent !== undefined) {
-                $target.removeClass(function(i, n) { return (n.match(/(^|\s)btn-\S+/g) || []).join(' '); });
-                $target.addClass("btn-" + deflt(message.accent, "default"));
-            }
-        }
-    } else if ($target.hasClass("inshiny-switch")) {
-        // switch: value, on, off
-        $target.data({
-            "on-label":  deflt(message.on,  $target.data("on-label")),
-            "off-label": deflt(message.off, $target.data("off-label"))
-        });
-        if (message.value != null) {
-            $target[0].checked = message.value;
-            $target[0].dispatchEvent(new Event('change', { bubbles: true }));
-            //console.log("!!!")
-            //$target.prop("checked", message.value);
-        }
-        set_switch_label($target);
-    } else if ($target.hasClass("inshiny-text-form")) {
-        if ($target.hasClass("inshiny-date-form")) {
-            // date: value (NULL), min (NULL), max (NULL), datesdisabled (NULL), daysofweekdisabled (NULL)
-            var datepicker_id = "inshiny-datepicker-" + message.id;
-            var datepicker = $("#" + datepicker_id).data().datepicker;
-            var curr_date = datepicker.getUTCDate();
-            if (message.min !== undefined) {
-                if (message.min === null) datepicker.setStartDate(null);
-                else datepicker.setStartDate(new Date(message.min));
-            }
-            if (message.max !== undefined) {
-                if (message.max === null) datepicker.setEndDate(null);
-                else datepicker.setEndDate(new Date(message.max));
-            }
-            if (message.datesdisabled !== undefined) {
-                if (message.datesdisabled === null) {
-                    datepicker.setDatesDisabled(null);
-                } else {
-                    var ddis;
-                    if (!Array.isArray(message.datesdisabled)) {
-                        ddis = [new Date(message.datesdisabled)];
-                    } else {
-                        ddis = message.datesdisabled.map(x => new Date(x))
-                    }
-                    datepicker.setDatesDisabled(ddis);
-                }
-            }
-            if (message.daysofweekdisabled !== undefined) {
-                datepicker.setDaysOfWeekDisabled(message.daysofweekdisabled);
-            }
-            datepicker.setUTCDate(curr_date); // need to reset this after above changes
-            if (message.value === null) {
-                $target.text(format_date_dp(Date(), datepicker_id)); // current date
-            } else if (message.value !== undefined) {
-                $target.text(format_date_dp(message.value, datepicker_id)); // accepts Date or string
-            }
-        } else if ($target.hasClass("inshiny-list-form")) {
-            // select: choices
-            if (message.choices != null) {
-                $("#inshiny-list-menu-" + message.id)[0].innerHTML = message.choices;
-                /// $menu.children().children().each(function() { $(this).data("item", $(this).attr("data-item")); });
-            }
-        } else if ($target.hasClass("inshiny-with-slider")) {
-            // slider: min, max, step (NULL), default
-            var min = Number(deflt(message.min, $target.data("min")));
-            var max = Number(deflt(message.max, $target.data("max")));
-            var step = defln(message.step, $target.data("step"));
-            if (step === null) { // auto choose step if null -- same method as in slider.R.
-                let range = max - min;
-                if (range < 2 || max != Math.floor(max) || min != Math.floor(min)) {
-                    step = Math.pow(10, Math.round(Math.log10(range / 100)));
-                } else {
-                    step = 1;
-                }
-            }
-            // numeric input
-            $target.data({
-                "min":     min,
-                "max":     max,
-                "step":    step,
-                "default": deflt(message.default, $target.data("default"))
-            });
-            $target.attr({
-                "aria-valuemin": min,
-                "aria-valuemax": max
-            })
-            // slider
-            $("#inshiny-slider-" + message.id).data("ionRangeSlider").update({
-                min: min,
-                max: max,
-                step: step
-            })
-        } else if ($target.hasClass("inshiny-number-form")) {
-            // numeric: min (NULL), max (NULL), step (NULL), default
-            $target.data({
-                "min":     deflt(message.min,     $target.data("min")),
-                "max":     deflt(message.max,     $target.data("max")),
-                "step":    deflt(message.step,    $target.data("step")),
-                "default": deflt(message.default, $target.data("default"))
-            });
-            if (message.min === null)  rm_data($target, "min");
-            if (message.max === null)  rm_data($target, "max");
-            if (message.step === null) rm_data($target, "step");
-            $target.attr({
-                "aria-valuemin": defln(message.min, $target.attr("aria-valuemin")),
-                "aria-valuemax": defln(message.max, $target.attr("aria-valuemax"))
-            })
-        }
-        // all text except date: value, placeholder
-        if (message.value != null && !$target.hasClass("inshiny-date-form")) {
-            $target.text(message.value);
-        }
-        if (message.placeholder != null) {
-            $target.attr("aria-placeholder", message.placeholder);
-            $target.siblings(".inshiny-text-placeholder")[0].innerHTML = message.placeholder;
-        }
-    } else if ($target.hasClass("shiny-input-select")) {
-        // selectize: options, selected
-        // Shiny's own select input binding rebuilds the control and reports
-        // the new value, so the message is passed on to it.
-        var select_message = {};
-        if (message.options !== undefined) {
-            select_message.options = message.options;
-        }
-        if (message.selected !== undefined) {
-            select_message.value = message.selected === null ? [] : message.selected;
-        }
-        // The binding replaces the selectize control, so the new one is bound
-        // once it has done so
-        var select_el = $target[0];
-        Promise.resolve(
-            $target.data("shiny-input-binding").receiveMessage(select_el, select_message)
-        ).then(function() {
-            bind_select(select_el);
-        });
-    } else {
-        throw new Error("Element with id " + message.id + " is not a recognised inshiny widget.")
-    }
-
-    // For all widgets
-    if (message.meaning !== undefined) {
-        $target.attr("aria-label", message.meaning);
-    }
 });

@@ -32,7 +32,8 @@ update_all = function(p)
 {
     id = function(x) paste0(p, "_", x)
 
-    update_inline(id("text"), value = "Updated")
+    update_inline(id("text"), value = "Updated",
+        placeholder = span(class = "text-danger", "Enter your name"))
     update_inline(id("number"), value = 42, min = 0, max = 100, step = 2)
     update_inline(id("slider"), value = 25, min = 0, max = 50)
     update_inline(id("switch"), value = TRUE, on = "Yes", off = "No")

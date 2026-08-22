@@ -5,16 +5,30 @@
 dynamic_ids = c("text", "number", "slider", "switch", "date", "select",
     "selectm", "link", "button")
 
-# Start the test app
-dynamic_app = function()
+# Start one of the test apps in tests/testthat/apps
+test_app = function(name = "dynamic")
 {
     skip_on_cran()
     skip_if_not_installed("shinytest2")
     skip_if(is.null(chromote::find_chrome()),
         "No Chrome-based browser available.")
 
-    shinytest2::AppDriver$new(test_path("apps", "dynamic"),
-        name = "dynamic", load_timeout = 30000)
+    shinytest2::AppDriver$new(test_path("apps", name),
+        name = name, load_timeout = 30000)
+}
+
+# Collect anything the app logs as an error, for tests that need to check that
+# an action is ignored rather than failing
+catch_errors = function(app)
+{
+    app$run_js("(function() {
+        window.__errors = [];
+        var log_error = console.error;
+        console.error = function() {
+            window.__errors.push(Array.prototype.slice.call(arguments).join(' '));
+            log_error.apply(console, arguments);
+        };
+    })()")
 }
 
 # Values of every widget in a panel, in the order of dynamic_ids
@@ -25,14 +39,14 @@ panel_values = function(app, p)
 }
 
 test_that("dynamic widgets report the same initial values as static ones", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     expect_equal(panel_values(app, "d"), panel_values(app, "s"))
 })
 
 test_that("dynamic text and number widgets report edits", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$run_js("(function() {
@@ -46,7 +60,7 @@ test_that("dynamic text and number widgets report edits", {
 })
 
 test_that("dynamic number widget validates like the static one", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$run_js("(function() {
@@ -66,7 +80,7 @@ test_that("dynamic number widget validates like the static one", {
 })
 
 test_that("dynamic slider and date widgets are bound to their controls", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     expect_true(app$get_js("!!$('#inshiny-slider-d_slider').data('ionRangeSlider')"))
@@ -89,7 +103,7 @@ test_that("dynamic slider and date widgets are bound to their controls", {
 })
 
 test_that("dynamic select widgets work", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     # Single select: choosing an item reports its value
@@ -106,7 +120,7 @@ test_that("dynamic select widgets work", {
 })
 
 test_that("dynamic widgets are spaced like static ones", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     # Distance between the tops of two consecutive lines of widgets
@@ -120,7 +134,7 @@ test_that("dynamic widgets are spaced like static ones", {
 })
 
 test_that("a multiple select is resized when its selection changes", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$click("update_d")
@@ -139,7 +153,7 @@ test_that("a multiple select is resized when its selection changes", {
 })
 
 test_that("update_inline reaches dynamic widgets", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$click("update_s")
@@ -155,7 +169,7 @@ test_that("update_inline reaches dynamic widgets", {
 })
 
 test_that("update_inline works for a multiple select", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$click("update_s")
@@ -170,8 +184,58 @@ test_that("update_inline works for a multiple select", {
         "Duster 360,Mazda RX4,Merc 240D")
 })
 
+test_that("update_inline sets a plain text aria-placeholder", {
+    app = test_app()
+    on.exit(app$stop())
+
+    app$click("update_d")
+    app$wait_for_idle()
+
+    # The placeholder is an HTML element, which is rendered as such, while the
+    # attribute a screen reader reads carries its text alone
+    expect_equal(app$get_js("$('#d_text').attr('aria-placeholder')"),
+        "Enter your name")
+    expect_equal(app$get_js(
+        "$('#d_text').siblings('.inshiny-text-placeholder').find('span.text-danger').length"),
+        1)
+})
+
+test_that("update_inline reaches a widget inside a module", {
+    app = test_app("module")
+    on.exit(app$stop())
+
+    expect_equal(app$get_value(input = "mod-txt"), "before")
+    expect_false(app$get_value(input = "mod-sw"))
+
+    app$click("mod-go")
+    app$wait_for_idle()
+
+    expect_equal(app$get_value(input = "mod-txt"), "after")
+    expect_true(app$get_value(input = "mod-sw"))
+})
+
+test_that("update_inline ignores a widget that is not rendered", {
+    app = test_app()
+    on.exit(app$stop())
+
+    app$set_inputs(show = FALSE)
+    app$wait_for_idle()
+    catch_errors(app)
+
+    app$click("update_d")
+    app$wait_for_idle()
+    expect_equal(app$get_js("window.__errors"), list())
+
+    # The same update is applied once the widgets are back
+    app$set_inputs(show = TRUE)
+    app$wait_for_idle()
+    app$click("update_d")
+    app$wait_for_idle()
+    expect_equal(app$get_value(input = "d_text"), "Updated")
+})
+
 test_that("dynamic widgets can be removed and re-inserted", {
-    app = dynamic_app()
+    app = test_app()
     on.exit(app$stop())
 
     app$set_inputs(show = FALSE)

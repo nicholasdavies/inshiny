@@ -89,11 +89,10 @@ update_inline = function(id, session = shiny::getDefaultReactiveDomain(),
     }
 
     # Require id
-    id
+    id = arg_string(id)
 
     # Populate message arguments
     args = list()
-    args$id = arg_string(id)
     args$value = arg_value(value)
     args$placeholder = arg_html(placeholder)
     args$meaning = arg_string(meaning)
@@ -136,7 +135,7 @@ update_inline = function(id, session = shiny::getDefaultReactiveDomain(),
     }
 
     # Send update message
-    session$sendCustomMessage("inshiny-update", args);
+    session$sendInputMessage(id, args);
 
     return (invisible())
 }

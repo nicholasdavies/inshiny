@@ -1,5 +1,11 @@
 # inshiny (development version)
 
+* `update_inline()` now works with widgets inside a Shiny module.
+
+* `update_inline()` no longer reports an error when no widget with the given
+  id has been rendered. As with Shiny's own update functions, the update is
+  ignored.
+
 * `update_inline()` now works with a multiple select, i.e. one created with
   `inline_select(multiple = TRUE)`. Accordingly, `selected` can now name more 
   than one option.
