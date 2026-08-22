@@ -183,6 +183,21 @@ function set_switch_label($switch) {
     }
 }
 
+// Select an item in a list widget and close its dropdown
+function list_select($option) {
+    var item = $option.data("item");
+    var list = $option.data("list");
+    $("#" + list)[0].textContent = item;
+
+    $option.parent().parent().children().children().removeClass("active");
+    $option.addClass("active");
+
+    var $dropdown = $("#inshiny-list-drop-" + list);
+    const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
+        new bootstrap.Dropdown($dropdown);
+    dropdown.hide();
+}
+
 // Process a .inshiny-text-form element: set placeholder visibility,
 // validate content, sync slider/datepicker, and report value to Shiny.
 function process_text_form(el) {
@@ -287,6 +302,35 @@ function resize_select($el) {
 
 // GENERAL SETUP
 
+// Inject styles derived from the active Bootstrap theme.
+// Can be called multiple times.
+var styles_injected = false;
+function ensure_styles() {
+    if (styles_injected) return;
+    styles_injected = true;
+
+    // Create form text colour style
+    // Taken from .form-control
+    const form_color = get_css_property("input", "form-control", "color", false);
+    var form_style = document.createElement("style");
+    form_style.type = "text/css";
+    form_style.innerHTML = ".inshiny-text-form { color: " + form_color + "; }";
+    document.head.appendChild(form_style);
+
+    // Create fake focus style
+    // In Boostrap themes, box-shadow is the only element of .focus-ring besides outline: 0.
+    // We also change the border-color to --bs-primary.
+    const box_shadow = get_css_property("input", "focus-ring", "box-shadow", true);
+    var focus_style = document.createElement("style");
+    focus_style.type = "text/css";
+    focus_style.innerHTML = ".inshiny-focus { box-shadow: " + box_shadow + "; border-color: var(--bs-primary); }";
+    document.head.appendChild(focus_style);
+}
+
+// Runs when DOM is ready, or runs immediately if the document is already loaded
+// (which is the case when this script only arrives with dynamically rendered UI)
+$(ensure_styles);
+
 // Auto-dropup dropdowns when too close to bottom
 $(document).on("shown.bs.dropdown", ".dropdown-center", function() {
     // calculate the required sizes, spaces
@@ -307,26 +351,128 @@ $(document).on("shown.bs.dropdown", ".dropdown-center", function() {
 });
 
 
+// EVENT HANDLERS
+
+// Delegated from document, so they also apply to widgets added after load.
+
+// Prevent newline
+$(document).on("keydown", ".inshiny-text-form", function(e) {
+    if (e.which == 13) { // return
+        e.preventDefault();
+    }
+});
+
+// Prevent newlines in paste
+$(document).on("paste", ".inshiny-text-form", function (event) {
+    event.preventDefault();
+
+    // Strip newlines
+    var text = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
+    text = text.replace(/\r?\n|\r/g, " ");
+
+    // Insert text at caret
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(document.createTextNode(text));
+
+    // Move caret after inserted text
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+});
+
+// Focus event
+$(document).on("focus", ".inshiny-text-form", function() {
+    $(this).siblings(".inshiny-text-box").addClass("inshiny-focus");
+});
+
+// Blur event
+$(document).on("blur", ".inshiny-text-form", function() {
+    $(this).siblings(".inshiny-text-box").removeClass("inshiny-focus");
+});
+
+// Defer focus to form-text
+$(document).on("click", ".inshiny-text-placeholder", function() {
+    $(this).siblings(".inshiny-text-form")[0].focus();
+});
+
+$(document).on("click", ".inshiny-text-rightpadding", function() {
+    let sel = window.getSelection();
+    sel.selectAllChildren($(this).siblings(".inshiny-text-form")[0]);
+    sel.collapseToEnd();
+});
+
+// Click-up event
+$(document).on("mousedown", ".inshiny-inc", function() {
+    adjust_number($(this).data("target-id"), +1);
+});
+
+// Click-down event
+$(document).on("mousedown", ".inshiny-dec", function() {
+    adjust_number($(this).data("target-id"), -1);
+});
+
+// Arrow keys up/down
+$(document).on("keydown", ".inshiny-number-form", function(e) {
+    if (e.which == 38) {
+        adjust_number(this.id, +1); // Up arrow
+    } else if (e.which == 40) {
+        adjust_number(this.id, -1); // Down arrow
+    } else if (e.which == 33) {
+        adjust_number(this.id, +10); // Page up
+    } else if (e.which == 34) {
+        adjust_number(this.id, -10); // Page down
+    } else if (e.which == 35) {
+        adjust_number(this.id, +99); // End
+    } else if (e.which == 36) {
+        adjust_number(this.id, -99); // Home
+    } else {
+        return;
+    }
+    e.preventDefault();
+});
+
+// Toggle labels and aria-checked on switch toggle
+$(document).on("change", ".inshiny-switch", function() {
+    set_switch_label($(this));
+});
+
+// Note, these two item select handlers are attached to the document
+// and delegated to each item. This ensures changes to choices don't
+// get lost and avoids the need to attach one handler for each item.
+$(document).on("click", ".inshiny-menu .inshiny-item", function() {
+    list_select($(this));
+});
+
+$(document).on("keydown", ".inshiny-menu .inshiny-item", function(e) {
+    // Enter or space
+    if (e.which == 13 || e.which == 32) {
+        list_select($(this));
+        e.preventDefault();
+    }
+});
+
+// This below causes the dropdown to open on keyboard select. This is
+// obviously useful to have and otherwise it's not there. We have to only
+// take keyboard focus events here (hence :focus-visible) as otherwise this
+// interferes with data-bs-toggle on mouse events.
+$(document).on("focus", ".inshiny-list-form", function() {
+    if (this.matches(":focus-visible")) {
+        var $dropdown = $("#inshiny-list-drop-" + this.id);
+        const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
+            new bootstrap.Dropdown($dropdown);
+        dropdown.show();
+    }
+});
+
+
 // WIDGET SETUP
 $(document).on("shiny:connected", function() {
 
     // STYLES
-
-    // Create form text colour style
-    const form_color = get_css_property("input", "form-control", "color", false);
-    var form_style = document.createElement("style");
-    form_style.type = "text/css";
-    form_style.innerHTML = ".inshiny-text-form { color: " + form_color + "; }";
-    document.head.appendChild(form_style);
-
-    // Create fake focus style
-    // In Boostrap themes, box-shadow is the only element of .focus-ring besides outline: 0.
-    // We also change the border-color to --bs-primary.
-    const box_shadow = get_css_property("input", "focus-ring", "box-shadow", true);
-    var focus_style = document.createElement("style");
-    focus_style.type = "text/css";
-    focus_style.innerHTML = ".inshiny-focus { box-shadow: " + box_shadow + "; border-color: var(--bs-primary); }";
-    document.head.appendChild(focus_style);
+    ensure_styles();
 
 
     // INLINE TEXT WIDGET
@@ -337,34 +483,6 @@ $(document).on("shiny:connected", function() {
     $(".inshiny-date-form").each(function() {
         Shiny.setInputValue($(this).attr("id") + ":shiny.date",
             $(this).data("value"), { priority: "event" });
-    });
-
-    // Prevent newline
-    $(".inshiny-text-form").on("keydown", function(e) {
-        if (e.which == 13) { // return
-            e.preventDefault();
-        }
-    });
-
-    // Prevent newlines in paste
-    $(document).on("paste", ".inshiny-text-form", function (event) {
-        event.preventDefault();
-
-        // Strip newlines
-        var text = (event.originalEvent.clipboardData || window.clipboardData).getData("text");
-        text = text.replace(/\r?\n|\r/g, " ");
-
-        // Insert text at caret
-        const selection = window.getSelection();
-        if (!selection.rangeCount) return;
-        const range = selection.getRangeAt(0);
-        range.deleteContents();
-        range.insertNode(document.createTextNode(text));
-
-        // Move caret after inserted text
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
     });
 
     // Create an observer instance
@@ -393,60 +511,6 @@ $(document).on("shiny:connected", function() {
         observer.observe(this, config);
     });
 
-    // Focus event
-    $(".inshiny-text-form").on("focus", function(e) {
-        $(e.target).siblings(".inshiny-text-box").addClass("inshiny-focus");
-    });
-
-    // Blur event
-    $(".inshiny-text-form").on("blur", function(e) {
-        $(e.target).siblings(".inshiny-text-box").removeClass("inshiny-focus");
-    });
-
-    // Defer focus to form-text
-    $(".inshiny-text-placeholder").on("click", function(e) {
-        $(e.target).siblings(".inshiny-text-form")[0].focus();
-    });
-
-    $(".inshiny-text-rightpadding").on("click", function(e) {
-        let sel = window.getSelection();
-        sel.selectAllChildren($(e.target).siblings(".inshiny-text-form")[0]);
-        sel.collapseToEnd();
-    });
-
-
-    // INLINE NUMBER WIDGET
-
-    // Click-up event
-    $(".inshiny-inc").on("mousedown", function(e) {
-        adjust_number($(e.target).data("target-id"), +1);
-    });
-
-    // Click-down event
-    $(".inshiny-dec").on("mousedown", function(e) {
-        adjust_number($(e.target).data("target-id"), -1);
-    });
-
-    // Arrow keys up/down
-    $(".inshiny-number-form").on("keydown", function(e) {
-        if (e.which == 38) {
-            adjust_number(e.target.id, +1); // Up arrow
-        } else if (e.which == 40) {
-            adjust_number(e.target.id, -1); // Down arrow
-        } else if (e.which == 33) {
-            adjust_number(e.target.id, +10); // Page up
-        } else if (e.which == 34) {
-            adjust_number(e.target.id, -10); // Page down
-        } else if (e.which == 35) {
-            adjust_number(e.target.id, +99); // End
-        } else if (e.which == 36) {
-            adjust_number(e.target.id, -99); // Home
-        } else {
-            return;
-        }
-        e.preventDefault();
-    })
-
 
     // INLINE SLIDER WIDGET
 
@@ -473,59 +537,6 @@ $(document).on("shiny:connected", function() {
     // Bind date forms to their datepickers
     $(".inshiny-with-datepicker").each(function() {
         bind_datepicker(this.id);
-    });
-
-
-    // INLINE SWITCH WIDGET
-
-    // Toggle labels and aria-checked on switch toggle
-    $(".inshiny-switch").on("change", function() {
-        set_switch_label($(this));
-    });
-
-
-    // INLINE LIST WIDGET
-
-    function list_select($option) {
-        var item = $option.data("item");
-        var list = $option.data("list");
-        $("#" + list)[0].textContent = item;
-
-        $option.parent().parent().children().children().removeClass("active");
-        $option.addClass("active");
-
-        var $dropdown = $("#inshiny-list-drop-" + list);
-        const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
-            new bootstrap.Dropdown($dropdown);
-        dropdown.hide();
-    }
-
-    // Note, these two item select handlers are attached to the menu
-    // and delegated to each item. This ensures changes to choices don't
-    // get lost and avoids the need to attach one handler for each item.
-    $(".inshiny-menu").on("click", ".inshiny-item", function(e) {
-        list_select($(e.target));
-    });
-
-    $(".inshiny-menu").on("keydown", ".inshiny-item", function(e) {
-        // Enter or space
-        if (e.which == 13 || e.which == 32) {
-            list_select($(e.target));
-            e.preventDefault();
-        }
-    });
-
-    // This below causes the dropdown to open on keyboard select. This is
-    // obviously useful to have and otherwise it's not there. We have to only
-    // take keyboard focus events here (hence :focus-visible) as otherwise this
-    // interferes with data-bs-toggle on mouse events.
-    $(".inshiny-list-form").on("focus", function(e) {
-        if (e.target.matches(":focus-visible")) {
-            var $dropdown = $("#inshiny-list-drop-" + e.target.id);
-            const dropdown = bootstrap.Dropdown.getInstance($dropdown) ||
-                new bootstrap.Dropdown($dropdown);
-            dropdown.show();
-        }
     });
 
 
