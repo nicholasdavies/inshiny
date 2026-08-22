@@ -6,8 +6,8 @@
     Output
       <span>
         <div class="inshiny-arrows">
-          <span class="inshiny-inc" data-target-id="number_id"></span>
-          <span class="inshiny-dec" data-target-id="number_id"></span>
+          <span class="inshiny-inc"></span>
+          <span class="inshiny-dec"></span>
         </div>
         <span class="inshiny-text-container">
           <span id="number_id" class="inshiny-nofocus inshiny-text-form inshiny-number-form" contenteditable tabindex="0" aria-placeholder="Enter a number" aria-label="Favourite number" style="max-width:10em" role="spinbutton" aria-valuenow="42" aria-valuemin="1" aria-valuemax="100" data-default="99" data-min="1" data-max="100" data-step="2">42</span>

@@ -15,7 +15,7 @@ test_that("update handles selects", {
     update_inline("select", fake_session, choices = "a")
     expect_equal(x, list(id = "select",
         choices = shiny::HTML(
-        '<li><a class="dropdown-item inshiny-item active" href="#" data-list="select" data-item="a" selected>a</a></li>'
+        '<li><a class="dropdown-item inshiny-item active" href="#" data-item="a" selected>a</a></li>'
     ),
         options = shiny::HTML('<option value="a" selected>a</option>'),
         selected = "a"))

@@ -49,32 +49,32 @@
       [1] 0 6
       
       $choices
-      <li><a class="dropdown-item inshiny-item active" href="#" data-list="select" data-item="a" selected>a</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="b">b</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="c">c</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="d">d</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="e">e</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="f">f</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="g">g</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="h">h</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="i">i</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="j">j</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="k">k</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="l">l</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="m">m</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="n">n</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="o">o</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="p">p</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="q">q</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="r">r</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="s">s</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="t">t</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="u">u</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="v">v</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="w">w</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="x">x</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="y">y</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select" data-item="z">z</a></li>
+      <li><a class="dropdown-item inshiny-item active" href="#" data-item="a" selected>a</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="b">b</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="c">c</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="d">d</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="e">e</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="f">f</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="g">g</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="h">h</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="i">i</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="j">j</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="k">k</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="l">l</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="m">m</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="n">n</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="o">o</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="p">p</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="q">q</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="r">r</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="s">s</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="t">t</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="u">u</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="v">v</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="w">w</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="x">x</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="y">y</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="z">z</a></li>
       
       $options
       <option value="a" selected>a</option>

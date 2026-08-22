@@ -12,10 +12,10 @@
           <span class="inshiny-text-rightpadding" aria-hidden="true"></span>
         </span>
         <ul id="inshiny-list-menu-select_id" class="dropdown-menu p-1 rounded-3 border shadow inshiny-menu" style="min-width: 1rem; max-height: 18.5rem; overflow-y: auto"><li><h6 class="dropdown-header">Dog names</h6></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select_id" data-item="Fido">Fido</a></li>
-      <li><a class="dropdown-item inshiny-item active" href="#" data-list="select_id" data-item="Rex" selected>Rex</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="Fido">Fido</a></li>
+      <li><a class="dropdown-item inshiny-item active" href="#" data-item="Rex" selected>Rex</a></li>
       <li><h6 class="dropdown-header">Cat names</h6></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select_id" data-item="Felix">Felix</a></li>
-      <li><a class="dropdown-item inshiny-item" href="#" data-list="select_id" data-item="Boots">Boots</a></li></ul>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="Felix">Felix</a></li>
+      <li><a class="dropdown-item inshiny-item" href="#" data-item="Boots">Boots</a></li></ul>
       </span>
 

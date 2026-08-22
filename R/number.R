@@ -60,8 +60,8 @@ inline_number = function(id, value, min = NULL, max = NULL, step = NULL,
     if (arrows) {
         widget = shiny::span(
             shiny::div(class = "inshiny-arrows",
-                shiny::span(class = "inshiny-inc", `data-target-id` = id),
-                shiny::span(class = "inshiny-dec", `data-target-id` = id)
+                shiny::span(class = "inshiny-inc"),
+                shiny::span(class = "inshiny-dec")
             ),
             widget
         )

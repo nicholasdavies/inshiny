@@ -56,7 +56,6 @@ inline_switch = function(id, value, on = "On", off = "Off",
         addAttrs(
             "aria-label" = meaning, # accessibility
             "aria-checked" = boolean(value), # accessibility
-            "data-label-id" = label_id, # attributes for JS
             "data-on-label" = on, # attributes for JS
             "data-off-label" = off # attributes for JS
         )

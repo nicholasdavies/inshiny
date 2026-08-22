@@ -114,10 +114,8 @@ select_details = function(id, choices, selected, multiple)
 
     # Modify options to use Bootstrap dropdown menu instead of option tags
     options = stringr::str_split_1(options, "\n")
-    templ0 = '<li><a class="dropdown-item inshiny-item" href="#" data-list="TX" data-item="\\1">\\2</a></li>';
-    templ1 = '<li><a class="dropdown-item inshiny-item active" href="#" data-list="TX" data-item="\\1" selected>\\2</a></li>';
-    templ0 = stringr::str_replace(templ0, "TX", id)
-    templ1 = stringr::str_replace(templ1, "TX", id)
+    templ0 = '<li><a class="dropdown-item inshiny-item" href="#" data-item="\\1">\\2</a></li>';
+    templ1 = '<li><a class="dropdown-item inshiny-item active" href="#" data-item="\\1" selected>\\2</a></li>';
 
     # Get selected item(s)
     selected = stringr::str_match(options,
