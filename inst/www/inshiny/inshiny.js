@@ -199,11 +199,10 @@ function list_select($option) {
 }
 
 // Process a .inshiny-text-form element: set placeholder visibility,
-// validate content, sync slider/datepicker, and report value to Shiny.
+// validate content, sync slider/datepicker, and return the value.
 function process_text_form(el) {
     var $el = $(el);
     var content = el.textContent || "";
-    var handler = "";
 
     // Get datepicker, if present
     var datepicker;
@@ -282,21 +281,62 @@ function process_text_form(el) {
         if (format_date_iso(datepicker.getUTCDate()) != content) {
             datepicker.update(format_date_dp(content, datepicker_id));
         }
-        handler = ":shiny.date";
     }
 
-    Shiny.setInputValue(el.id + handler, content, { priority: "event" });
+    return content;
 }
 
 // Resize selectize spacer
 function resize_select($el) {
+    var $spacer = $el.parent().parent().siblings(".inshiny-sel-spacer");
+
+    // Give the spacer room before measuring, so that the selected items are
+    // laid out on one line. Measured while they are wrapped, they report the
+    // width they have been squeezed into rather than the width they need.
+    $spacer.outerWidth(10000, true);
+
     var width = 0;
     $el.children().each(function() {
         width += $(this).outerWidth(true);
     });
-    var $spacer = $el.parent().parent().siblings(".inshiny-sel-spacer");
     width = "calc(" + width + "px + 1.5rem)";
     $spacer.outerWidth(width, true);
+}
+
+// Size a selectize widget's spacer and keep it in step with the widget
+function bind_select(el) {
+    unbind_select(el);
+
+    var $el = $(el).parent().find(".selectize-input");
+    if (!$el.length) return;
+
+    // Set initial width of the select element
+    resize_select($el);
+
+    // Keep track of changes to the select element
+    var resize_observer = new MutationObserver(function() {
+        resize_select($el);
+    });
+
+    // Configuration of the observer
+    var resize_config = {
+        subtree: true,
+        characterData: true,
+        childList: true
+    };
+
+    resize_observer.observe($el[0], resize_config);
+
+    $(el).data("inshinyResizeObserver", resize_observer);
+}
+
+// Stop keeping a selectize widget's spacer in step with the widget
+function unbind_select(el) {
+    var resize_observer = $(el).data("inshinyResizeObserver");
+    if (resize_observer) {
+        resize_observer.disconnect();
+        $(el).removeData("inshinyResizeObserver");
+    }
 }
 
 
@@ -468,104 +508,88 @@ $(document).on("focus", ".inshiny-list-form", function() {
 });
 
 
-// WIDGET SETUP
-$(document).on("shiny:connected", function() {
+// INPUT BINDINGS
 
-    // STYLES
-    ensure_styles();
+// Text, number, slider, date and single select widgets all share the
+// .inshiny-text-form span, so one binding serves them all.
+var text_binding = new Shiny.InputBinding();
 
+$.extend(text_binding, {
+    find: function(scope) {
+        return $(scope).find(".inshiny-text-form");
+    },
 
-    // INLINE TEXT WIDGET
+    initialize: function(el) {
+        ensure_styles();
 
-    // Date forms are processed later, after bind_datepicker has created their
-    // datepicker; bind_datepicker modifies textContent, which triggers the
-    // observer below and calls process_text_form.
-    $(".inshiny-date-form").each(function() {
-        Shiny.setInputValue($(this).attr("id") + ":shiny.date",
-            $(this).data("value"), { priority: "event" });
-    });
+        var $el = $(el);
 
-    // Create an observer instance
-    // I use this rather than jQuery's on change event because the
-    // inshiny-text-form elements are spans, and the change event only works
-    // for input, select, and textarea elements.
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            // Always grab the current text content of the observed element
-            var el = mutation.target.nodeType === 3   // text node
-                ? mutation.target.parentElement
-                : mutation.target;
-            process_text_form(el);
+        // Bind number forms to their sliders
+        if ($el.hasClass("inshiny-with-slider")) {
+            bind_slider(el.id);
+        }
+
+        // Bind date forms to their datepickers
+        if ($el.hasClass("inshiny-with-datepicker")) {
+            bind_datepicker(el.id);
+        }
+    },
+
+    getValue: function(el) {
+        return process_text_form(el);
+    },
+
+    getType: function(el) {
+        return $(el).hasClass("inshiny-date-form") ? "shiny.date" : null;
+    },
+
+    subscribe: function(el, callback) {
+        // A mutation observer is used rather than jQuery's change event, as
+        // the inshiny-text-form elements are spans, and the change event only
+        // works for input, select, and textarea elements.
+        var observer = new MutationObserver(function() {
+            callback(false);
         });
-    });
 
-    // Configuration of the observer
-    var config = {
-        subtree: true,
-        characterData: true,
-        childList: true
-    };
-
-    // Observe all changes to .inshiny-text-form elements
-    $(".inshiny-text-form").each(function() {
-        observer.observe(this, config);
-    });
-
-
-    // INLINE SLIDER WIDGET
-
-    // Bind number forms to their sliders
-    $(".inshiny-with-slider").each(function() {
-        bind_slider(this.id);
-    });
-
-
-    // INITIAL STATE
-
-    // Apply initial visual state (placeholder visibility, invalid class) and
-    // send initial Shiny input value for non-date text/number forms. Run after
-    // bind_slider so slider-bound numbers can sync to their sliders. Date
-    // forms are handled by the observer firing in response to bind_datepicker
-    // modifying textContent below.
-    $(".inshiny-text-form").not(".inshiny-date-form").each(function() {
-        process_text_form(this);
-    });
-
-
-    // INLINE CALENDAR WIDGET
-
-    // Bind date forms to their datepickers
-    $(".inshiny-with-datepicker").each(function() {
-        bind_datepicker(this.id);
-    });
-
-
-    // INLINE SELECTIZE WIDGET
-
-    // Set initial width of each select element
-    $(".inshiny-sel .selectize-input").each(function() {
-        resize_select($(this));
-    });
-
-    // Keep track of changes to select elements
-    var resize_observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            resize_select($(mutation.target));
+        observer.observe(el, {
+            subtree: true,
+            characterData: true,
+            childList: true
         });
-    });
 
-    // Configuration of the observer
-    var resize_config = {
-        subtree: true,
-        characterData: true,
-        childList: true
-    };
+        $(el).data("inshinyObserver", observer);
+    },
 
-    // Observe all changes to .inshiny-text-form elements
-    $(".inshiny-sel .selectize-input").each(function() {
-        resize_observer.observe(this, resize_config);
-    });
-})
+    unsubscribe: function(el) {
+        var observer = $(el).data("inshinyObserver");
+        if (observer) {
+            observer.disconnect();
+            $(el).removeData("inshinyObserver");
+        }
+    }
+});
+
+// Registered at a lower priority than Shiny's own bindings so that it
+// initializes after them: bind_slider and bind_datepicker need the slider and
+// datepicker that those bindings create.
+Shiny.inputBindings.register(text_binding, "inshiny.text", -1);
+
+
+// INLINE SELECTIZE WIDGET
+
+// Selectize controls belong to Shiny's own select input binding, so their
+// spacer is sized when that binding reports the element as bound.
+$(document).on("shiny:bound", ".inshiny-sel .shiny-input-select", function(e) {
+    if (e.bindingType !== "input") return;
+
+    bind_select(this);
+});
+
+$(document).on("shiny:unbound", ".inshiny-sel .shiny-input-select", function(e) {
+    if (e.bindingType !== "input") return;
+
+    unbind_select(this);
+});
 
 
 // WIDGET UPDATING
@@ -719,6 +743,25 @@ Shiny.addCustomMessageHandler("inshiny-update", function(message) {
             $target.attr("aria-placeholder", message.placeholder);
             $target.siblings(".inshiny-text-placeholder")[0].innerHTML = message.placeholder;
         }
+    } else if ($target.hasClass("shiny-input-select")) {
+        // selectize: options, selected
+        // Shiny's own select input binding rebuilds the control and reports
+        // the new value, so the message is passed on to it.
+        var select_message = {};
+        if (message.options !== undefined) {
+            select_message.options = message.options;
+        }
+        if (message.selected !== undefined) {
+            select_message.value = message.selected === null ? [] : message.selected;
+        }
+        // The binding replaces the selectize control, so the new one is bound
+        // once it has done so
+        var select_el = $target[0];
+        Promise.resolve(
+            $target.data("shiny-input-binding").receiveMessage(select_el, select_message)
+        ).then(function() {
+            bind_select(select_el);
+        });
     } else {
         throw new Error("Element with id " + message.id + " is not a recognised inshiny widget.")
     }

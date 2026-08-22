@@ -136,6 +136,36 @@ select_details = function(id, choices, selected, multiple)
     return (list(items = items, selected = selected))
 }
 
+# Format choices and selected for inline_selectize
+selectize_details = function(id, choices, selected)
+{
+    # Build shiny::selectInput to get formatted options
+    widget = coalesce(shiny::selectInput(inputId = id, label = NULL,
+        choices = choices, selected = selected, multiple = TRUE,
+        selectize = FALSE))
+
+    # Check structure is as expected
+    check_tags(widget, shiny::div(
+        shiny::tags$label(),
+        shiny::div(
+            shiny::tags$select()
+        )
+    ), "shiny::selectInput()")
+
+    # Extract formatted options; these are option and optgroup tags, which is
+    # what Shiny's own select input binding expects
+    options = widget$children[[2]]$children[[1]]$children[[1]]
+
+    # Get selected item(s)
+    selected = stringr::str_match(stringr::str_split_1(options, "\n"),
+        '^<option value="([^"]*)" selected>')[, 2]
+    selected = selected[!is.na(selected)]
+    selected = vapply(selected, function(s) plain_text(shiny::HTML(s)),
+        character(1), USE.NAMES = FALSE)
+
+    return (list(options = options, selected = selected))
+}
+
 # Select input that supports multiple selections.
 inline_selectize = function(id, choices, selected = NULL, multiple = FALSE,
     meaning = NULL)

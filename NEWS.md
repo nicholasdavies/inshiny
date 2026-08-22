@@ -1,5 +1,12 @@
 # inshiny (development version)
 
+* `update_inline()` now works with a multiple select, i.e. one created with
+  `inline_select(multiple = TRUE)`. Accordingly, `selected` can now name more 
+  than one option.
+
+* Fixed a bug in which a multiple select was not made wide enough for its
+  contents when a selected choice was more than one word long.
+
 * Fixed a bug in which an HTML element passed as the `placeholder` of a
   text-based widget was displayed as escaped markup instead of being rendered.
   The `aria-placeholder` attribute now carries the plain text of such a

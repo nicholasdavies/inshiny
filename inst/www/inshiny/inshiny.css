@@ -25,11 +25,15 @@
 
 /* When inside a bslib gap-spacing container (e.g. page_sidebar), counteract
    the flex gap between consecutive inline elements so they remain tightly
-   spaced like regular text lines. */
-.bslib-gap-spacing > .inshiny-inline {
+   spaced like regular text lines. The output of a uiOutput has
+   display: contents, so inline elements within one are spaced by the gap of
+   the container holding the uiOutput. */
+.bslib-gap-spacing > .inshiny-inline,
+.bslib-gap-spacing > .shiny-html-output > .inshiny-inline {
     margin-bottom: 0 !important;
 }
-.bslib-gap-spacing > .inshiny-inline + .inshiny-inline {
+.bslib-gap-spacing > .inshiny-inline + .inshiny-inline,
+.bslib-gap-spacing > .shiny-html-output > .inshiny-inline + .inshiny-inline {
     margin-top: calc(-1 * var(--bslib-mb-spacer, 1rem) + 0.2rem);
 }
 

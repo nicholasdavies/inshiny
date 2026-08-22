@@ -110,18 +110,29 @@ update_inline = function(id, session = shiny::getDefaultReactiveDomain(),
     args$daysofweekdisabled = arg_whatever(daysofweekdisabled)
 
     # Special logic for choices and selected
+    # Each message carries both a single select form (choices, value) and a
+    # multiple select form (options, selected), as which of the two the widget
+    # is is only known in the browser.
     if (!missing(choices) && !missing(selected)) {
         # change choices and selected (send selected as value)
         details = select_details(id, choices, selected, multiple = FALSE);
+        sdetails = selectize_details(id, choices, selected);
         args$choices = details$items
+        args$options = sdetails$options
         args$value = details$selected
+        args$selected = sdetails$selected
     } else if (!missing(choices) && missing(selected)) {
         # change choices, maintain currently-selected item if still present
         details = select_details(id, choices, session$input[[id]], multiple = FALSE);
+        sdetails = selectize_details(id, choices, session$input[[id]]);
         args$choices = details$items
+        args$options = sdetails$options
+        args$selected = sdetails$selected
     } else if (!missing(selected)) {
         # send selected as value
-        args$value = arg_string(selected)
+        selected = arg_strings(selected)
+        args$value = selected[[1]]
+        args$selected = selected
     }
 
     # Send update message
@@ -139,6 +150,22 @@ arg_whatever = function(x)
         return (NULL)
     } else if (is.null(x)) {
         return (NA)
+    }
+    return (x)
+}
+
+# argument is one or more character strings
+arg_strings = function(x)
+{
+    if (missing(x)) {
+        return (NULL)
+    } else if (is.null(x)) {
+        return (NA)
+    }
+    x = as.character(x)
+    if (length(x) == 0 || anyNA(x)) {
+        stop("Expecting one or more strings for parameter ",
+            as.character(substitute(x)))
     }
     return (x)
 }

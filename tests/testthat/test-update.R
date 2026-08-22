@@ -16,11 +16,18 @@ test_that("update handles selects", {
     expect_equal(x, list(id = "select",
         choices = shiny::HTML(
         '<li><a class="dropdown-item inshiny-item active" href="#" data-list="select" data-item="a" selected>a</a></li>'
-    )))
+    ),
+        options = shiny::HTML('<option value="a" selected>a</option>'),
+        selected = "a"))
 
     # Selected but no choices
     update_inline("select", fake_session, selected = "a", datesdisabled = NULL)
-    expect_equal(x, list(id = "select", datesdisabled = NA, value = "a"))
+    expect_equal(x, list(id = "select", datesdisabled = NA, value = "a",
+        selected = "a"))
+
+    # Multiple selected, for a multiple select
+    update_inline("select", fake_session, selected = c("a", "b"))
+    expect_equal(x, list(id = "select", value = "a", selected = c("a", "b")))
 })
 
 test_that("update handles errors", {

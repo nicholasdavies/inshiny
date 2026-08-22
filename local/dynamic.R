@@ -34,8 +34,7 @@ widgets = function(p)
     )
 }
 
-# Send an update to every widget in a panel. inline_select(multiple = TRUE) is
-# left out as update_inline() does not support it.
+# Send an update to every widget in a panel.
 update_all = function(p)
 {
     id = function(x) paste0(p, "_", x)
@@ -49,6 +48,8 @@ update_all = function(p)
         off = span(class = "text-secondary", "Switched off"))
     update_inline(id("date"), value = as.Date("2025-08-15"))
     update_inline(id("select"), choices = rownames(mtcars)[6:10])
+    update_inline(id("selectm"), choices = rownames(mtcars)[6:10],
+        selected = rownames(mtcars)[7:8])
     update_inline(id("link"), label = "updated link", accent = "danger")
     update_inline(id("button"), label = "updated button", icon = icon("paw"))
 }
