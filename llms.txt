@@ -7,9 +7,6 @@ Consult the
 [Introduction](https://nicholasdavies.github.io/inshiny/articles/inshiny.html)
 vignette for a brief guide to `inshiny`.
 
-Note that `inshiny` does not currently support use with Shiny’s
-`uiOutput` and `renderUI`.
-
 ## Installation
 
 You can install the released version of inshiny from

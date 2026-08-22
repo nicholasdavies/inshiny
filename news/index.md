@@ -2,6 +2,30 @@
 
 ## inshiny (development version)
 
+- inshiny widgets can now be used with Shiny’s
+  [`uiOutput()`](https://rdrr.io/pkg/shiny/man/htmlOutput.html) and
+  [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html).
+
+- [`update_inline()`](https://nicholasdavies.github.io/inshiny/reference/update_inline.md)
+  now works with widgets inside a Shiny module.
+
+- [`update_inline()`](https://nicholasdavies.github.io/inshiny/reference/update_inline.md)
+  no longer reports an error when no widget with the given id has been
+  rendered. As with Shiny’s own update functions, the update is ignored.
+
+- [`update_inline()`](https://nicholasdavies.github.io/inshiny/reference/update_inline.md)
+  now works with a multiple select, i.e. one created with
+  `inline_select(multiple = TRUE)`. Accordingly, `selected` can now name
+  more than one option.
+
+- Fixed a bug in which a multiple select was not made wide enough for
+  its contents when a selected choice was more than one word long.
+
+- Fixed a bug in which an HTML element passed as the `placeholder` of a
+  text-based widget was displayed as escaped markup instead of being
+  rendered. The `aria-placeholder` attribute now carries the plain text
+  of such a placeholder, rather than its markup.
+
 ## inshiny 0.1.4
 
 CRAN release: 2026-03-31
