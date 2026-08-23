@@ -37,3 +37,9 @@ test_that("update handles errors", {
     expect_error(update_inline("id", fake_session, step = 1, default = Inf)) # invalid value
     expect_error(update_inline("id", fake_session, label = 1:2)) # invalid html
 })
+
+test_that("arg helpers work", {
+    expect_identical(arg_strings(), NULL)
+    expect_identical(arg_strings(NULL), NA)
+    expect_error(arg_strings(character()))
+})
