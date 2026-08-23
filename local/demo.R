@@ -30,8 +30,41 @@ choices = list(`East Coast` = list(NY = "NY", NJ = "NJ", CT = "CT"), `West Coast
     WA = "WA", OR = "OR", CA = "CA"), Midwest = list(MN = "MN",
     WI = "WI", `<IA>` = "\"IA"))
 
+# X means works
+#
+# X "shiny"
+#
+# "brite" - buttons a bit funny
+# X "cerulean"
+# X "cosmo"
+# "cyborg" - group select is hard to see
+# X "darkly"
+# X "flatly"
+# X "journal"
+# X "litera"
+# "lumen" - dynamic button spacing issue
+# X "lux"
+# "materia" - weird extra button spacing
+# X "minty"
+# X "morph"
+# X "pulse"
+# X "quartz"
+# X "sandstone"
+# X "simplex"
+# "sketchy" - switch spacing issues
+# X "slate"
+# X "solar"
+# X "spacelab"
+# X "superhero"
+# X "united"
+# X "vapor"
+# X "yeti"
+# X "zephyr"
+
+# NB - multi select issue
+
 ui = page_fixed(
-    theme = bs_theme(version = 5, preset = "lumen"),
+    theme = bs_theme(version = 5, preset = "quartz"),
 
     h1("Inline widget test"),
 
@@ -129,5 +162,5 @@ server = function(input, output, session) {
     })
 }
 
-shinyApp(ui, server)
+shinyApp(ui, server, options = list(port = sample(3000:6000, 1)))
 
