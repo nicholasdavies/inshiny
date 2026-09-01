@@ -16,7 +16,8 @@ test_app = function(name = "dynamic")
 
     # Chromote allows 10 seconds for each command it sends to the browser,
     # which a loaded machine can exceed while an app is starting
-    chromote::default_chromote_object()$default_timeout = 60
+    browser = chromote::default_chromote_object()
+    browser$default_timeout = 60
 
     shinytest2::AppDriver$new(test_path("apps", name),
         name = name, load_timeout = 60000)
