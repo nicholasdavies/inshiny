@@ -173,7 +173,7 @@ app with `shinyApp(ui, server)`.
 ## A note on themes
 
 Most of the `bslib` “bootswatch” theme presets work well with `inshiny`.
-There are just a few which have some issues: `"brite"`, `"cyborg"`,
+There are just a few that have some issues: `"brite"`, `"cyborg"`,
 `"lumen"`, and `"sketchy"` have some minor display issues with some
 widgets, while `"materia"` has some odd spacing problems with buttons.
 The other 22 `bslib` presets and the default `"shiny"` preset work well.
