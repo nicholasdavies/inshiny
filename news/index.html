@@ -39,6 +39,7 @@
 <li><p><code><a href="../reference/update_inline.html">update_inline()</a></code> now works with widgets inside a Shiny module.</p></li>
 <li><p><code><a href="../reference/update_inline.html">update_inline()</a></code> no longer reports an error when no widget with the given id has been rendered. As with Shiny’s own update functions, the update is ignored.</p></li>
 <li><p><code><a href="../reference/update_inline.html">update_inline()</a></code> now works with a multiple select, i.e. one created with <code>inline_select(multiple = TRUE)</code>. Accordingly, <code>selected</code> can now name more than one option.</p></li>
+<li><p>Fixed a bug in which the up and down arrows on <code><a href="../reference/inline_number.html">inline_number()</a></code> were invisible against the background under several Bootstrap themes.</p></li>
 <li><p>Fixed a bug in which a multiple select was not made wide enough for its contents when a selected choice was more than one word long.</p></li>
 <li><p>Fixed a bug in which an HTML element passed as the <code>placeholder</code> of a text-based widget was displayed as escaped markup instead of being rendered. The <code>aria-placeholder</code> attribute now carries the plain text of such a placeholder, rather than its markup.</p></li>
 </ul></div>

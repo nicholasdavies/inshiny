@@ -53,6 +53,8 @@ to use Bootstrap 5 even after Bootstrap 6 is released and `bslib` starts
 to support it. (We may add support for Bootstrap 6 to `inshiny` in the
 future, but better to make sure your app stays future-proof either way!)
 
+## Using `inshiny`
+
 All `inshiny` widgets should be wrapped in a call to
 [`inline()`](https://nicholasdavies.github.io/inshiny/reference/inline.md),
 which creates a “paragraph” or “line” of text in which you can mix in
@@ -120,9 +122,15 @@ ui <- page_fixed(
 )
 ```
 
-The controls for this version take up far more space:
+The controls for this basic Shiny version take up around 640 pixels of
+vertical space:
 
 ![](images/vignette_2.jpg)
+
+By contrast, the `inshiny` version takes up around 210 pixels of
+vertical space:
+
+![](images/vignette_3.jpg)
 
 Of course, you could save some vertical space by laying out the elements
 in a grid, but they are still rather large compared to the `inshiny`
@@ -161,3 +169,11 @@ This illustrates the use of
 [`update_inline()`](https://nicholasdavies.github.io/inshiny/reference/update_inline.md)
 to reset the widgets to their original values. You would then launch the
 app with `shinyApp(ui, server)`.
+
+## A note on themes
+
+Most of the `bslib` “bootswatch” theme presets work well with `inshiny`.
+There are just a few which have some issues: `"brite"`, `"cyborg"`,
+`"lumen"`, and `"sketchy"` have some minor display issues with some
+widgets, while `"materia"` has some odd spacing problems with buttons.
+The other 22 `bslib` presets and the default `"shiny"` preset work well.

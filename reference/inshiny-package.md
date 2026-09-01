@@ -16,3 +16,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Nick Davies <nicholas.davies@lshtm.ac.uk>
+
+Authors:
+
+- Nick Davies <nicholas.davies@lshtm.ac.uk>

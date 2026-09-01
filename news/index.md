@@ -18,6 +18,10 @@
   `inline_select(multiple = TRUE)`. Accordingly, `selected` can now name
   more than one option.
 
+- Fixed a bug in which the up and down arrows on
+  [`inline_number()`](https://nicholasdavies.github.io/inshiny/reference/inline_number.md)
+  were invisible against the background under several Bootstrap themes.
+
 - Fixed a bug in which a multiple select was not made wide enough for
   its contents when a selected choice was more than one word long.
 
