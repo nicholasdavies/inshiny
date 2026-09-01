@@ -66,7 +66,7 @@ values = function(input, p)
 }
 
 ui = page_fixed(
-    theme = bs_theme(version = 5, preset = "lumen"),
+    theme = bs_theme(version = 5, preset = "materia"),
 
     h1("Static vs dynamic widgets"),
 

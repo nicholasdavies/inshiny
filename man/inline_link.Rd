@@ -30,7 +30,7 @@ vector, each one will be appended to \code{"link-"} and added to the link.}
 An inline widget to be included in an \code{\link[=inline]{inline()}} wrapper.
 }
 \description{
-A link widget similar to \code{\link[shiny:actionButton]{shiny::actionLink()}} that can be included in an
+A link widget similar to \code{\link[shiny:actionLink]{shiny::actionLink()}} that can be included in an
 \code{\link[=inline]{inline()}} wrapper.
 }
 \examples{
@@ -43,5 +43,5 @@ ui <- bslib::page_fixed(
 )
 }
 \seealso{
-\link[shiny:actionButton]{shiny::actionLink} for how the link works with your Shiny server.
+\link[shiny:actionLink]{shiny::actionLink} for how the link works with your Shiny server.
 }

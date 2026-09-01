@@ -15,7 +15,7 @@ inline_switch(id, value, on = "On", off = "Off", meaning = NULL)
 \item{on, off}{Labels that will appear to the right of the switch when the
 switch is on or off, respectively. These can be character strings or
 HTML elements. For example, you can style these with a
-\link[htmltools:builder]{span} and apply one of the
+\link[htmltools:span]{span} and apply one of the
 \href{https://getbootstrap.com/docs/5.3/utilities/colors/}{Bootstrap 5 text color classes}
 (see examples). \code{NULL} for no labels.}
 

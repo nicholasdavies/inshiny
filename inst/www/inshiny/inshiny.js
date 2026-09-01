@@ -347,6 +347,12 @@ function resize_select($el) {
     });
     width = "calc(" + width + "px + 1.5rem)";
     $spacer.outerWidth(width, true);
+
+    // Put an open menu back in line with the resized widget
+    var select = $el.closest(".inshiny-sel").find("select")[0];
+    if (select && select.selectize && select.selectize.isOpen) {
+        select.selectize.positionDropdown();
+    }
 }
 
 // Size a selectize widget's spacer and keep it in step with the widget

@@ -8,11 +8,11 @@ inline(..., class = "mb-1")
 }
 \arguments{
 \item{...}{Unnamed arguments: Inline widgets (such as \code{\link[=inline_text]{inline_text()}}),
-character strings, or \link[htmltools:builder]{HTML tags} that will appear next
+character strings, or \link[htmltools:tag]{HTML tags} that will appear next
 to each other in a line or paragraph. These are pasted together with no
 spaces between them, so add extra spaces to your character strings if
 needed. Named arguments (e.g. \code{style}) are additional attributes for the
-HTML \link[htmltools:builder]{div} tag wrapping the line.}
+HTML \link[htmltools:div]{div} tag wrapping the line.}
 
 \item{class}{Extra classes to apply to the line. The default, \code{"mb-1"}, is a
 Bootstrap 5 class that adds a small amount of margin to the bottom of
@@ -35,7 +35,7 @@ Inline widgets from inshiny are typically displayed with borders around them
 to show that they are editable. For the borders to display correctly, inshiny
 includes some custom CSS to make sure the borders work inside common
 \link[bslib:bslib-package]{bslib} containers such as \link[bslib:card]{bslib::card} and
-\link[bslib:accordion]{bslib::accordion_panel}. However, if you place inline widgets inside a
+\link[bslib:accordion_panel]{bslib::accordion_panel}. However, if you place inline widgets inside a
 custom container that has its own opaque background (e.g. a \code{div} with
 \code{background-color} set), the border around widgets may disappear. To fix
 this, add the CSS class \code{"inshiny-bg"} to the container:

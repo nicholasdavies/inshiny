@@ -61,8 +61,6 @@ choices = list(`East Coast` = list(NY = "NY", NJ = "NJ", CT = "CT"), `West Coast
 # X "yeti"
 # X "zephyr"
 
-# NB - multi select issue
-
 ui = page_fixed(
     theme = bs_theme(version = 5, preset = "quartz"),
 

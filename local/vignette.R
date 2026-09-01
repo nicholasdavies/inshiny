@@ -4,7 +4,7 @@ library(inshiny)
 
 ui <- page_fixed(
     theme = bs_theme(version = 5, preset = "quartz"),
-    tags$head(tags$style("body { background-image: none }")),
+    tags$head(tags$style("body { background-image: none; background-color: #880088 }")),
 
     h1("Temperature plot"),
 

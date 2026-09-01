@@ -153,6 +153,29 @@ test_that("a multiple select is resized when its selection changes", {
     expect_true(contents_fit)
 })
 
+test_that("a multiple select keeps its menu in place when an item is chosen", {
+    app = test_app()
+    on.exit(app$stop())
+
+    # Distance between the bottom of the widget and the top of its open menu
+    menu_gap = function() app$get_js("(function() {
+        var $sel = $('#d_selectm').closest('.inshiny-sel');
+        var $widget = $sel.find('.selectize-control');
+        var $menu = $sel.find('.selectize-dropdown');
+        return Math.round($menu[0].getBoundingClientRect().top -
+                          $widget[0].getBoundingClientRect().bottom);
+    })()")
+
+    app$run_js("(function() { $('#d_selectm')[0].selectize.open(); })()")
+    app$wait_for_idle()
+    expect_lt(menu_gap(), 10)
+
+    # Choosing an item widens the widget, and the menu follows it
+    app$run_js("(function() { $('#d_selectm')[0].selectize.addItem('beta'); })()")
+    app$wait_for_idle()
+    expect_lt(menu_gap(), 10)
+})
+
 test_that("update_inline reaches dynamic widgets", {
     app = test_app()
     on.exit(app$stop())
