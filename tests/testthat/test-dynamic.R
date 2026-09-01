@@ -16,14 +16,25 @@ test_app = function(name = "dynamic")
     skip_if(is.null(chromote::find_chrome()),
         "No Chrome-based browser available.")
 
-    # Chromote allows 10 seconds for each command it sends to the browser,
-    # which a loaded machine can exceed while an app is starting
-    browser = chromote::default_chromote_object()
-    browser$default_timeout = 60
+    # shinytest2 starts the browser with the first app and shares it with the
+    # rest. Chromote allows 10 seconds for each command sent to a browser it
+    # already has, which a loaded machine can exceed while an app is starting.
+    if (chromote::has_default_chromote_object()) {
+        browser = chromote::default_chromote_object()
+        browser$default_timeout = 60
+    }
 
     shinytest2::AppDriver$new(test_path("apps", name),
         name = name, load_timeout = 60000)
 }
+
+# The browser outlives the apps that use it, so it is shut down once the tests
+# in this file are done, rather than being left for R CMD check to find
+withr::defer({
+    if (chromote::has_default_chromote_object()) {
+        try(chromote::default_chromote_object()$close(), silent = TRUE)
+    }
+}, teardown_env())
 
 # Collect anything the app logs as an error, for tests that need to check that
 # an action is ignored rather than failing
