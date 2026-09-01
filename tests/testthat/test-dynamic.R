@@ -14,8 +14,12 @@ test_app = function(name = "dynamic")
     skip_if(is.null(chromote::find_chrome()),
         "No Chrome-based browser available.")
 
+    # Chromote allows 10 seconds for each command it sends to the browser,
+    # which a loaded machine can exceed while an app is starting
+    chromote::default_chromote_object()$default_timeout = 60
+
     shinytest2::AppDriver$new(test_path("apps", name),
-        name = name, load_timeout = 30000)
+        name = name, load_timeout = 60000)
 }
 
 # Collect anything the app logs as an error, for tests that need to check that
