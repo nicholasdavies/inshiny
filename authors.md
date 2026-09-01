@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/nicholasdavies/inshiny/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/nicholasdavies/inshiny/blob/v0.1.5/DESCRIPTION)
 
 Davies N (2026). *inshiny: Compact Inline Widgets for 'shiny' Apps*. R
 package version 0.1.5, <https://github.com/nicholasdavies/inshiny>.
