@@ -1,6 +1,6 @@
 # Changelog
 
-## inshiny (development version)
+## inshiny 0.1.5
 
 - inshiny widgets can now be used with Shiny’s
   [`uiOutput()`](https://rdrr.io/pkg/shiny/man/htmlOutput.html) and
